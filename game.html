@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Remote app</title>
+    <!-- Incluez la bibliothèque D3.js -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+    <h1>Random Walk Remote</h1>
+    <p id="connection-state"></p>
+    <h2>Current position:</h2>
+    <p>X coordinate : <span id="x-coordinate"></span></p>
+    <p>Y coordinate : <span id="y-coordinate"></span></p>
+
+    <!-- Conteneur pour le graphique SVG -->
+    <svg id="graph-container" width="400" height="400">
+        <!-- Ajoutez un rectangle pour le cadre -->
+        <rect id="graph-frame" width="400" height="400" fill="none" stroke="black" stroke-width="2"></rect>
+    </svg>
+
+    <h2>Change position:</h2>
+    <p><span>X: </span><span><input id="new_x"></span></p>
+    <p><span>Y: </span><span><input id="new_y"></span></p>
+    <button id="change-pos">Change position</button>
+
+    <script>
+        function generateGuid() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                const r = Math.random() * 16 | 0;
+                const v = c == 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
+        const graph_size = 400;
+        const svg = d3.select("#graph-container");
+        const graphFrame = d3.select("#graph-frame");
+
+        var x = 0;
+        var y = 0;
+
+        const id_unique = generateGuid();
+        const hostname = window.location.hostname;
+        const socket = new WebSocket('ws://'+hostname+':8080');
+
+        socket.onopen = function() {
+            document.querySelector("#connection-state").innerHTML = "Connecté au serveur"
+            message = {type:"connection", id:id_unique}
+            socket.send(JSON.stringify(message))
+        };
+
+        socket.onmessage = function(event) {
+
+            position = JSON.parse(event.data).position
+            x = position.x;
+            y = position.y;
+            document.querySelector("#x-coordinate").innerHTML = x;
+            document.querySelector("#y-coordinate").innerHTML = y;
+
+            
+            // Créez un cercle à la position (x, y)
+            svg.selectAll(".temp-circles").remove();
+
+            /*
+            svg.append("circle")
+                .attr("cx", x*graph_size/100)
+                .attr("class", "hist-circles")
+                .attr("cy", y*graph_size/100)
+                .attr("r", 2) // Rayon du cercle
+                .style("fill", "red"); // Couleur de remplissage du cercle
+            */
+            svg.append("circle")
+                .attr("cx", x*graph_size/100)
+                .attr("class", "temp-circles")
+                .attr("cy", y*graph_size/100)
+                .attr("r", 8) // Rayon du cercle
+                .style("fill", "blue"); // Couleur de remplissage du cercle
+            
+        };
+
+        document.getElementById("change-pos").addEventListener("click", function() {
+            let newX = document.querySelector("#new_x").value;
+            let newY = document.querySelector("#new_y").value;
+
+            // Vérifiez si les valeurs sont numériques avant de les envoyer
+            if (!isNaN(newX) && !isNaN(newY)) {
+                let pos = [Number(newX), Number(newY)];
+                socket.send(pos.join(";"));
+                console.log(newX);
+                console.log(newY);
+                document.querySelector("#new_x").value = '';
+                document.querySelector("#new_y").value = '';
+            } else {
+                // Gérez ici le cas où les valeurs ne sont pas numériques
+                alert("Veuillez entrer des valeurs numériques valides.");
+            }
+                })
+    </script>
+</body>
+</html>

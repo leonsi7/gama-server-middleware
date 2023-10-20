@@ -244,7 +244,7 @@ function sendMonitorInformation() {
     })
 }
 
-monitor_app.get('/', (req, res) => {
+monitor_app.get('/monitor', (req, res) => {
     fs.readFile('monitor.html', 'utf-8', (err, data) => {
       if(err) {
         console.log(err);
@@ -255,6 +255,18 @@ monitor_app.get('/', (req, res) => {
       }
     })
   })
+
+monitor_app.get('/game', (req, res) => {
+fs.readFile('game.html', 'utf-8', (err, data) => {
+    if(err) {
+    console.log(err);
+    res.status(500).send('Server error')
+    } else {
+
+    res.send(data)
+    }
+})
+})
   
 monitor_app.listen(monitor_app_port, () => {
     console.log(`Listening on port ${monitor_app_port}`)
