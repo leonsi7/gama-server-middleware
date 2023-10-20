@@ -1,0 +1,14 @@
+{
+    "type":"json_state",
+    "gama": {
+        "connected":false,
+        "launched_experiment":false,
+        "loading":false,
+        "content_error":"",
+        "experiment_id":""
+    },
+
+    "vr": {
+        "id_connected":[]
+    }
+}
