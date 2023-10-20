@@ -1,6 +1,8 @@
 {
     "type":"json_state",
     "gama": {
+        "model_path":"C:\\Users\\across-lab\\Documents\\GamaWorkspace\\Leon\\models\\Test_gama_server3.gaml",
+        "ip_adress":"10.0.61.179",
         "connected":false,
         "launched_experiment":false,
         "loading":false,

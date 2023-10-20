@@ -7,31 +7,21 @@ const gama_ws_port = 6868
 const monitor_ws_port = 80
 const vr_ws_port = 8080
 const monitor_app_port = 8000
-const gama_simulation_update_port = 3001
-
-//Models and path to gama server. To be changed when the server has changed
-path_to_model= "C:\\Users\\across-lab\\Documents\\GamaWorkspace\\Leon\\models\\Test_gama_server3.gaml" //"C:\\Users\\Léon\\Workspaces\\GamaWorkspace\\Gama_server_VR\\models\\Test_gama_server3.gaml" 
-ip_adress_gama_server = "10.0.61.179" //"localhost"
 
 // Global JSON state
-var json_state  = {gama:{connected:false}};
+var json_state = JSON.parse(fs.readFileSync('json_state.json', 'utf-8'))
+
+
 var json_simulation;
-const time_stamp = [];
 
-
-fs.readFile('json_state.json', 'utf-8', (err, data) => {
-    if(err) {
-      console.log(err);
-    } else {
-      json_state = JSON.parse(data)
-    }
-});
 
 //Messages about Gama Server
-var load_experiment = {
+function load_experiment() {
+    return {
     "type": "load",
-    "model": path_to_model,
-    "experiment": "test",
+    "model": json_state.gama.model_path,
+    "experiment": "test"
+    }
 }
 
 function play_experiment() {
@@ -177,7 +167,7 @@ function connectGama() {
     json_state["gama"]["loading"] = true
     sendMonitorInformation()
 
-    gama_socket = new WebSocket("ws://"+ip_adress_gama_server+":"+gama_ws_port);
+    gama_socket = new WebSocket("ws://"+json_state.gama.ip_adress+":"+gama_ws_port);
 
     gama_socket.onopen = function() {
         console.log("Connected to Gama Server");
@@ -246,10 +236,12 @@ function connectGama() {
 const monitor_socket = new WebSocket.Server({ port: monitor_ws_port });
 const monitor_app = express();
 
-var monitor_socket_client
+var monitor_socket_clients = []
 
 function sendMonitorInformation() {
-    if (monitor_socket_client != undefined) monitor_socket_client.send(JSON.stringify(json_state));
+    if (monitor_socket_clients != undefined) monitor_socket_clients.forEach((client) => {
+        client.send(JSON.stringify(json_state));
+    })
 }
 
 monitor_app.get('/', (req, res) => {
@@ -258,6 +250,7 @@ monitor_app.get('/', (req, res) => {
         console.log(err);
         res.status(500).send('Server error')
       } else {
+
         res.send(data)
       }
     })
@@ -268,9 +261,9 @@ monitor_app.listen(monitor_app_port, () => {
 })
 
 monitor_socket.on('connection', function connection(ws) {
-    monitor_socket_client = ws
+    monitor_socket_clients.push(ws)
     sendMonitorInformation()
-    monitor_socket_client.on('message', function incoming(message) {
+    ws.on('message', function incoming(message) {
         const json_monitor = JSON.parse(message)
         const type = json_monitor['type']
         if (type == "launch_experiment") launchExperiment()

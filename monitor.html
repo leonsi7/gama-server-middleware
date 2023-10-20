@@ -42,7 +42,8 @@
 
 
     <script>
-        const socket = new WebSocket('ws://localhost:80');
+        const hostname = window.location.hostname;
+        const socket = new WebSocket('ws://'+hostname+':80');
 
         socket.onopen = function() {
             
