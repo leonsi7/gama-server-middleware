@@ -1,5 +1,11 @@
 {
     "type":"json_state",
+
+    "gama_ws_port":6868,
+    "monitor_ws_port":80,
+    "vr_ws_port":8080,
+    "app_port":8000,
+    
     "gama": {
         "model_path":"C:\\Users\\across-lab\\Documents\\GamaWorkspace\\Leon\\models\\Test_gama_server3.gaml",
         "ip_adress":"10.0.61.179",
