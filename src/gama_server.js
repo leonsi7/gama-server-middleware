@@ -13,6 +13,8 @@ var list_messages;
 var function_to_call;
 var current_id_vr;
 
+var server_model_copy;
+
 //List of error messages for Gama Server
 const gama_error_messages = ["SimulationStatusError",
         "SimulationErrorDialog",
@@ -25,8 +27,10 @@ const gama_error_messages = ["SimulationStatusError",
 class ConnectorGamaServer {
     constructor(server_model) {
         this.server_model = server_model;
-        this.gama_ws_port = this.state_info.getJsonState().gama_ws_port != undefined ? this.state_info.getJsonState().gama_ws_port : DEFAULT_GAMA_WS_PORT;
+        server_model_copy = server_model;
+        this.gama_ws_port = this.server_model.json_state.gama_ws_port != undefined ? this.server_model.json_state.gama_ws_port : DEFAULT_GAMA_WS_PORT;
         this.gama_error_messages = gama_error_messages;
+        this.connectGama();
     }
 
     /* Protocol messages about Gama Server */
@@ -36,27 +40,27 @@ class ConnectorGamaServer {
     load_experiment() {
         return {
         "type": "load",
-        "model": server_model.json_state.gama.model_path,
+        "model": server_model_copy.json_state.gama.model_path,
         "experiment": "test"
         }
     }
     play_experiment() {
         return {
             "type": "play",
-            "exp_id": server_model.json_state.gama.experiment_id,
+            "exp_id": server_model_copy.json_state.gama.experiment_id,
         }
     } 
     stop_experiment() {
         return  {
             "type": "stop",
-            "exp_id": server_model.json_state.gama.experiment_id,
+            "exp_id": server_model_copy.json_state.gama.experiment_id,
         }
     }
     add_vr_headset() {
         return  {
             "type": "expression",
             "content": "Add a new VR headset", 
-            "exp_id": server_model.json_state.gama.experiment_id,
+            "exp_id": server_model_copy.json_state.gama.experiment_id,
             "expr": "create VrHeadset { id <- \""+current_id_vr+"\"; }"
         }
     }
@@ -64,7 +68,7 @@ class ConnectorGamaServer {
         return  {
             "type": "expression",
             "content": "Remove a VR Headset", 
-            "exp_id": server_model.json_state.gama.experiment_id,
+            "exp_id": server_model_copy.json_state.gama.experiment_id,
             "expr": "do killVrHeadset(\""+current_id_vr+"\");"
         }
     }
@@ -91,7 +95,7 @@ class ConnectorGamaServer {
 
     launchExperiment() {
         if (this.server_model.json_state["gama"]["connected"] == true && this.server_model.json_state["gama"]["launched_experiment"] == false) {
-            list_messages = [load_experiment, play_experiment];
+            list_messages = [this.load_experiment, this.play_experiment];
             index_messages = 0;
             do_sending = true;
             continue_sending = true;
@@ -108,7 +112,7 @@ class ConnectorGamaServer {
 
     stopExperiment() {
         if (this.server_model.json_state["gama"]["launched_experiment"] == true) {
-            list_messages = [stop_experiment];
+            list_messages = [this.stop_experiment];
             index_messages = 0;
             do_sending = true;
             continue_sending = true;
@@ -122,14 +126,14 @@ class ConnectorGamaServer {
                 });
                 this.server_model.notifyMonitor();
             }
-            sendMessages()
+            this.sendMessages()
         }
     }
 
     addNewVrHeadset(id_vr) {
         if (this.server_model.json_state["gama"]["launched_experiment"] == false) return
         current_id_vr = id_vr
-        list_messages = [add_vr_headset];
+        list_messages = [this.add_vr_headset];
         index_messages = 0;
         do_sending = true;
         continue_sending = true;
@@ -137,12 +141,12 @@ class ConnectorGamaServer {
             this.server_model.json_state["vr"][id_vr]["authentified"] = true
             this.server_model.notifyMonitor();
         }
-        sendMessages()
+        this.sendMessages()
     }
 
     removeVrHeadset(id_vr) {
         current_id_vr = id_vr
-        list_messages = [remove_vr_headset];
+        list_messages = [this.remove_vr_headset];
         index_messages = 0;
         do_sending = true;
         continue_sending = true;
@@ -151,41 +155,43 @@ class ConnectorGamaServer {
             this.server_model.json_state["vr"][id_vr]["authentified"] = false
             this.server_model.notifyMonitor();
         }
-        sendMessages()
+        this.sendMessages()
     }
 
     connectGama() {
         this.server_model.json_state["gama"]["loading"] = true
-        this.state_info.setJsonState(this.server_model.json_state);
-    
+        this.server_model.notifyMonitor();
+        const server_model = this.server_model;
+        const sendMessages = this.sendMessages;
         gama_socket = new WebSocket("ws://"+this.server_model.json_state.gama.ip_adress+":"+this.gama_ws_port);
     
         gama_socket.onopen = function() {
             console.log("Connected to Gama Server");
-            this.server_model.json_state["gama"]["connected"] = true
-            this.server_model.json_state["gama"]["launched_experiment"] = false
-            this.server_model.notifyMonitor();
+            server_model.json_state["gama"]["connected"] = true
+            server_model.json_state["gama"]["launched_experiment"] = false
+            server_model.notifyMonitor();
         };
     
         gama_socket.onmessage = function(event) {
             try {
+                
                 const data = JSON.parse(event.data)
                 if (data.type == "SimulationOutput" && data.content != String({ message: '{}', color: null })) {
                     const cleaned_string = data.content.toString().substring(13,data.content.toString().length -15)
                     server_model.json_simulation = JSON.parse(cleaned_string)
-                    this.server_model.notifyVrClients();
+                    server_model.notifyVrClients();
 
                 }
                 if (data.type == "CommandExecutedSuccessfully") {
-                    if (data.command != undefined && data.command.type == "load") this.server_model.json_state.gama.experiment_id = data.content
+                    if (data.command != undefined && data.command.type == "load") server_model.json_state.gama.experiment_id = data.content
                     continue_sending = true
                     setTimeout(sendMessages,300)
                 }
                 if (gama_error_messages.includes(data.type)) {
-                    this.server_model.json_state["gama"]["content_error"] = data.type + " for the command: "+ data.command.type
-                    this.server_model.json_state["gama"]["loading"] = false
-                    this.server_model.notifyMonitor();
-                    this.server_model.json_state["gama"]["content_error"] = ""
+                    server_model.json_state["gama"]["content_error"] = data.type + " for the command: "+ data.command.type
+                    server_model.json_state["gama"]["loading"] = false
+                    server_model.notifyMonitor();
+                    server_model.json_state["gama"]["content_error"] = ""
                     throw "A problem appeared in the last message. Please check the response from the Server"
                 }
             }
@@ -195,13 +201,13 @@ class ConnectorGamaServer {
             }
         }
         gama_socket.addEventListener('close', (event) => {
-            this.server_model.json_state["gama"]["connected"] = false;
-            this.server_model.json_state["gama"]["launched_experiment"] = false;
-            this.server_model.json_state["gama"]["loading"] = false;
-            this.server_model.json_state["vr"]["id_connected"].forEach(id_vr => {
-                this.server_model.json_state["vr"][id_vr]["authentified"] = false;
+            server_model.json_state["gama"]["connected"] = false;
+            server_model.json_state["gama"]["launched_experiment"] = false;
+            server_model.json_state["gama"]["loading"] = false;
+            server_model.json_state["vr"]["id_connected"].forEach(id_vr => {
+                server_model.json_state["vr"][id_vr]["authentified"] = false;
             });
-            this.server_model.notifyMonitor();
+            server_model.notifyMonitor();
             if (event.wasClean) {
                 console.log('The WebSocket connection with Gama Server was properly be closed');
             } else {

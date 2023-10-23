@@ -13,7 +13,7 @@ class App {
         const monitor_app = express();
 
         monitor_app.get('/monitor', (req, res) => {
-            fs.readFile('monitor.html', 'utf-8', (err, data) => {
+            fs.readFile('views/monitor.html', 'utf-8', (err, data) => {
               if(err) {
                 console.log(err);
                 res.status(500).send('Server error')
@@ -25,7 +25,7 @@ class App {
           })
         
         monitor_app.get('/game', (req, res) => {
-        fs.readFile('game.html', 'utf-8', (err, data) => {
+        fs.readFile('views/game.html', 'utf-8', (err, data) => {
             if(err) {
             console.log(err);
             res.status(500).send('Server error')
@@ -36,8 +36,8 @@ class App {
             });
         });
           
-        monitor_app.listen(monitor_app_port, () => {
-            console.log(`Listening on port ${monitor_app_port}`)
+        monitor_app.listen(this.app_port, () => {
+            console.log(`Listening on port ${this.app_port}`)
         });
     
     }

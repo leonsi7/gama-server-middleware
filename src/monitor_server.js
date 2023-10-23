@@ -12,17 +12,17 @@ class MonitorServer {
         this.monitor_ws_port = server_model.json_state.monitor_ws_port != undefined ? server_model.json_state.monitor_ws_port : DEFAULT_MONITOR_WS_PORT;
         this.monitor_socket = new WebSocket.Server({ port: this.monitor_ws_port });
 
-        monitor_socket.on('connection', function connection(ws) {
+        this.monitor_socket.on('connection', function connection(ws) {
             monitor_socket_clients.push(ws)
-            this.sendMonitorInformation();
+            server_model.notifyMonitor();
             ws.on('message', function incoming(message) {
                 const json_monitor = JSON.parse(message)
                 const type = json_monitor['type']
-                if (type == "launch_experiment") launchExperiment()
-                else if (type == "stop_experiment") stopExperiment()
-                else if (type == "try_connection") connectGama()
-                else if (type == "add_vr_headset") addNewVrHeadset(json_monitor["id"])
-                else if (type == "remove_vr_headset") removeVrHeadset(json_monitor["id"])
+                if (type == "launch_experiment") server_model.launchExperiment()
+                else if (type == "stop_experiment") server_model.stopExperiment()
+                else if (type == "try_connection") server_model.connectGama()
+                else if (type == "add_vr_headset") server_model.addNewVrHeadset(json_monitor["id"])
+                else if (type == "remove_vr_headset") server_model.removeVrHeadset(json_monitor["id"])
             })
         });
     }
@@ -36,4 +36,4 @@ class MonitorServer {
     
 }
 
-module.exports = MonitorServer();
+module.exports = MonitorServer;

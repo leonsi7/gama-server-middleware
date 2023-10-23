@@ -13,7 +13,7 @@ class VrServer {
         this.vr_ws_port = server_model.json_state.vr_ws_port != undefined ? server_model.json_state.vr_ws_port : DEFAULT_VR_WS_PORT;
         this.vr_socket = new WebSocket.Server({ port: this.vr_ws_port });
 
-        vr_socket.on('connection', function connection(ws) {
+        this.vr_socket.on('connection', function connection(ws) {
             ws.on('message', function incoming(message) {
                 const json_vr = JSON.parse(message)
                 if (json_vr.type == "connection") {
@@ -38,13 +38,13 @@ class VrServer {
                         server_model.notifyMonitor();
                     }
                     if (server_model.json_state["vr"][json_vr.id]["authentified"] == false){
-                        addNewVrHeadset(json_vr.id)
+                        server_model.addNewVrHeadset(json_vr.id)
                     }
                 }
         
-                if (json_vr.type == "exit" && server_model.json_state["vr"]["id_connected"].includes(json_vr.id) && server_model.json_state["vr"][json_vr.id]["authentified"] == true){
-                    removeVrHeadset()
-                }
+                // if (json_vr.type == "exit" && server_model.json_state["vr"]["id_connected"].includes(json_vr.id) && server_model.json_state["vr"][json_vr.id]["authentified"] == true){
+                //     server_model.removeVrHeadset()
+                // }
             });
         
             ws.on('close', () => {
