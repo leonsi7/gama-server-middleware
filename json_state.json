@@ -1,14 +1,14 @@
 {
     "type":"json_state",
 
-    "gama_ws_port":6868,
+    "gama_ws_port":1000,
     "monitor_ws_port":80,
     "vr_ws_port":8080,
     "app_port":8000,
     
     "gama": {
-        "model_path":"C:\\Users\\Léon\\Workspaces\\GamaWorkspace\\Gama_server_VR\\models\\Test_gama_server3.gaml",
-        "ip_adress":"10.0.167.38",
+        "model_file":"/models/model1.gaml",
+        "ip_adress":"localhost",
         "connected":false,
         "launched_experiment":false,
         "loading":false,

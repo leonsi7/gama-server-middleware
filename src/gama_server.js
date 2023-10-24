@@ -40,7 +40,7 @@ class ConnectorGamaServer {
     load_experiment() {
         return {
         "type": "load",
-        "model": server_model_copy.json_state.gama.model_path,
+        "model": process.cwd()+server_model_copy.json_state.gama.model_file,
         "experiment": "test"
         }
     }
@@ -188,10 +188,12 @@ class ConnectorGamaServer {
                     setTimeout(sendMessages,300)
                 }
                 if (gama_error_messages.includes(data.type)) {
+                    console.log(data);
                     server_model.json_state["gama"]["content_error"] = data.type + " for the command: "+ data.command.type
                     server_model.json_state["gama"]["loading"] = false
                     server_model.notifyMonitor();
                     server_model.json_state["gama"]["content_error"] = ""
+                    
                     throw "A problem appeared in the last message. Please check the response from the Server"
                 }
             }

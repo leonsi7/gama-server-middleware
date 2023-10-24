@@ -7,25 +7,31 @@
 </head>
 <body>
     <h1>Random Walk Remote</h1>
-    <p id="connection-state"></p>
-    <h2>Current position:</h2>
-    <p>X coordinate : <span id="x-coordinate"></span></p>
-    <p>Y coordinate : <span id="y-coordinate"></span></p>
+    
+        <p id="connection-state" style="color:green;font-weight: bold;"></p>
+        <p>
+            <span>ID player: </span><span id="id-view"></span>
+        </p>
+        
+        <h2>Current position:</h2>
 
-    <!-- Conteneur pour le graphique SVG -->
-    <svg id="graph-container" width="400" height="400">
-        <!-- Ajoutez un rectangle pour le cadre -->
-        <rect id="graph-frame" width="400" height="400" fill="none" stroke="black" stroke-width="2"></rect>
-    </svg>
+            <p>X coordinate : <span id="x-coordinate"></span></p>
+            <p>Y coordinate : <span id="y-coordinate"></span></p>
 
-    <h2>Change position:</h2>
-    <p><span>X: </span><span><input id="new_x"></span></p>
-    <p><span>Y: </span><span><input id="new_y"></span></p>
-    <button id="change-pos">Change position</button>
+            <svg id="graph-container" width="400" height="400">
+                <!-- Ajoutez un rectangle pour le cadre -->
+                <rect id="graph-frame" width="400" height="400" fill="none" stroke="black" stroke-width="2"></rect>
+            </svg>
+
+        <h2>Change position:</h2>
+
+            <p><span>X: </span><span><input id="new_x"></span></p>
+            <p><span>Y: </span><span><input id="new_y"></span></p>
+            <button id="change-pos">Change position</button>
 
     <script>
         function generateGuid() {
-            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            return 'xxxx'.replace(/[xy]/g, function(c) {
                 const r = Math.random() * 16 | 0;
                 const v = c == 'x' ? r : (r & 0x3 | 0x8);
                 return v.toString(16);
@@ -39,11 +45,12 @@
         var y = 0;
 
         const id_unique = generateGuid();
+        document.querySelector("#id-view").innerHTML = id_unique;
         const hostname = window.location.hostname;
         const socket = new WebSocket('ws://'+hostname+':8080');
 
         socket.onopen = function() {
-            document.querySelector("#connection-state").innerHTML = "Connecté au serveur"
+            document.querySelector("#connection-state").innerHTML = "&#10004; Connecté au serveur"
             message = {type:"connection", id:id_unique}
             socket.send(JSON.stringify(message))
         };
@@ -76,6 +83,23 @@
                 .style("fill", "blue"); // Couleur de remplissage du cercle
             
         };
+        
+        socket.addEventListener('close', (event) => {
+            document.querySelector("#connection-state").innerHTML = "&#x274C; The central server disconnected ! Please refresh this page when the server came back to work"
+            document.querySelector("#connection-state").style = "color:red;font-weight: bold;"
+            if (event.wasClean) {
+                console.log('The WebSocket connection with Gama Server was properly be closed');
+            } else {
+                console.error('The Websocket connection with Gama Server interruped suddenly');
+            }
+            console.log(`Closure id : ${event.code}, Reason : ${event.reason}`);
+
+        })
+
+        socket.addEventListener('error', (error) => {
+            document.querySelector("#connection-state").innerHTML = "&#x274C; The cetral server disconnected ! Please refresh this page when the server came back to work"
+            document.querySelector("#connection-state").style = "color:red;font-weight: bold;"
+        });
 
         document.getElementById("change-pos").addEventListener("click", function() {
             let newX = document.querySelector("#new_x").value;
@@ -94,6 +118,8 @@
                 alert("Veuillez entrer des valeurs numériques valides.");
             }
                 })
+
+            
     </script>
 </body>
 </html>

@@ -11,10 +11,7 @@ model Testgamaserver
 /* Insert your model definition here */
 
 global {
-	//int count;
-	init {
-		//count <- 0;
-	}
+
 	reflex  send_simulation_info when:every(1 #cycle){
 		map<string, unknown> json;
 		map<string, unknown> sending_message;
@@ -27,12 +24,7 @@ global {
 			json[vr_headset.id] <- info_json;
 
 		}
-		
-		//json["count"] <- count;
 		write as_json_string(json);
-		//float time_current <- machine_time;
-		//save [count, time_current] to: "time_stamp_start.csv" format:csv rewrite:false;
-		//count <- count + 1;
 	}
 	
 	action killVrHeadset(string id_vr) {
@@ -43,11 +35,6 @@ global {
 				}
 			}
 		}
-	}
-	
-	action saveCount(int nb) {
-		float time_current <- machine_time;
-		save [nb, time_current] to: "time_stamp_end.csv" format:csv rewrite:false;
 	}
 }
 
