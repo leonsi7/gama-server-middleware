@@ -7,8 +7,9 @@
 </head>
 <body>
     <h1>Random Walk Remote</h1>
-    
+
         <p id="connection-state" style="color:green;font-weight: bold;"></p>
+        <p id="authentification-state"></p>
         <p>
             <span>ID player: </span><span id="id-view"></span>
         </p>
@@ -44,44 +45,46 @@
         var x = 0;
         var y = 0;
 
+        var json_state;
+
         const id_unique = generateGuid();
         document.querySelector("#id-view").innerHTML = id_unique;
         const hostname = window.location.hostname;
         const socket = new WebSocket('ws://'+hostname+':8080');
 
         socket.onopen = function() {
-            document.querySelector("#connection-state").innerHTML = "&#10004; Connecté au serveur"
+            document.querySelector("#connection-state").innerHTML = "&#10004; Connected to central Server"
             message = {type:"connection", id:id_unique}
             socket.send(JSON.stringify(message))
         };
 
         socket.onmessage = function(event) {
 
-            position = JSON.parse(event.data).position
-            x = position.x;
-            y = position.y;
-            document.querySelector("#x-coordinate").innerHTML = x;
-            document.querySelector("#y-coordinate").innerHTML = y;
+            var json = JSON.parse(event.data)
+            if (json.type == "json_state") {
+                
+                json_state = json;
+                const authentified = json_state.vr[id_unique].authentified;
+                document.querySelector("#authentification-state").innerHTML = authentified ? "&#10004; Authentified to Gama Server" : "&#x274C; Unauthentified to Gama Server, please wait"
+                document.querySelector("#authentification-state").style = authentified ? "color:green;" : "color:red;";
+            }
+            else if (json.type == "json_simulation") {
+                const json_simulation = json;
+                position = json_simulation.position
+                x = position.x;
+                y = position.y;
+                document.querySelector("#x-coordinate").innerHTML = x;
+                document.querySelector("#y-coordinate").innerHTML = y;
 
-            
-            // Créez un cercle à la position (x, y)
-            svg.selectAll(".temp-circles").remove();
+                svg.selectAll(".temp-circles").remove();
 
-            /*
-            svg.append("circle")
-                .attr("cx", x*graph_size/100)
-                .attr("class", "hist-circles")
-                .attr("cy", y*graph_size/100)
-                .attr("r", 2) // Rayon du cercle
-                .style("fill", "red"); // Couleur de remplissage du cercle
-            */
-            svg.append("circle")
-                .attr("cx", x*graph_size/100)
-                .attr("class", "temp-circles")
-                .attr("cy", y*graph_size/100)
-                .attr("r", 8) // Rayon du cercle
-                .style("fill", "blue"); // Couleur de remplissage du cercle
-            
+                svg.append("circle")
+                    .attr("cx", x*graph_size/100)
+                    .attr("class", "temp-circles")
+                    .attr("cy", y*graph_size/100)
+                    .attr("r", 8) // Rayon du cercle
+                    .style("fill", "blue"); // Couleur de remplissage du cercle
+            }
         };
         
         socket.addEventListener('close', (event) => {

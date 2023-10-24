@@ -17,6 +17,7 @@ class ServerModel {
 
     notifyMonitor() {
         this.monitor_server.sendMonitorInformation();
+        this.vr_server.broadcastJsonStateVr()
     }
 
     notifyVrClients() {

@@ -10,10 +10,11 @@ class App {
         this.server_model = server_model;
         this.app_port = server_model.json_state.app_port != undefined ? server_model.json_state.app_port : DEFAULT_APP_PORT;
         
-        const monitor_app = express();
+        const app = express();
+        app.use(express.static('public'));
 
-        monitor_app.get('/monitor', (req, res) => {
-            fs.readFile('views/monitor.html', 'utf-8', (err, data) => {
+        app.get('/monitor', (req, res) => {
+            fs.readFile('public/monitor.html', 'utf-8', (err, data) => {
               if(err) {
                 console.log(err);
                 res.status(500).send('Server error')
@@ -24,8 +25,20 @@ class App {
             })
           })
         
-        monitor_app.get('/game', (req, res) => {
-        fs.readFile('views/game.html', 'utf-8', (err, data) => {
+        app.get('/game', (req, res) => {
+          fs.readFile('public/game.html', 'utf-8', (err, data) => {
+              if(err) {
+              console.log(err);
+              res.status(500).send('Server error')
+              } else {
+          
+              res.send(data)
+              }
+            });
+        });
+
+        app.get('/home', (req, res) => {
+          fs.readFile('public/home.html', 'utf-8', (err, data) => {
             if(err) {
             console.log(err);
             res.status(500).send('Server error')
@@ -35,11 +48,22 @@ class App {
             }
             });
         });
+        
+
+        app.get('/favicon.ico', (req, res) => {
+          res.sendFile('/public/favicon.ico');
+        });
+
+        app.get('/', (req, res) => {
+          res.redirect('/home');
+        });
+
           
-        monitor_app.listen(this.app_port, () => {
+        app.listen(this.app_port, () => {
             console.log(`Listening on port ${this.app_port}`)
         });
-    
+
+        
     }
 }
 

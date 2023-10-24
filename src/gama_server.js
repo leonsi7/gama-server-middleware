@@ -80,7 +80,7 @@ class ConnectorGamaServer {
                 if (typeof list_messages[index_messages] == "function") {
                     gama_socket.send(JSON.stringify(list_messages[index_messages]()))
                     //console.log("Message sent to Gama-Server:");
-                    //onsole.log(list_messages[index_messages]());
+                    //console.log(list_messages[index_messages]());
                 }
                 else gama_socket.send(JSON.stringify(list_messages[index_messages]));
                 continue_sending = false;
@@ -174,7 +174,6 @@ class ConnectorGamaServer {
     
         gama_socket.onmessage = function(event) {
             try {
-                
                 const data = JSON.parse(event.data)
                 if (data.type == "SimulationOutput" && data.content != String({ message: '{}', color: null })) {
                     const cleaned_string = data.content.toString().substring(13,data.content.toString().length -15)
@@ -188,12 +187,12 @@ class ConnectorGamaServer {
                     setTimeout(sendMessages,300)
                 }
                 if (gama_error_messages.includes(data.type)) {
-                    console.log(data);
-                    server_model.json_state["gama"]["content_error"] = data.type + " for the command: "+ data.command.type
+                    var command_type
+                    if (data.command != undefined) command_type = data.command.type
+                    server_model.json_state["gama"]["content_error"] = data.type + " for the command: "+ command_type
                     server_model.json_state["gama"]["loading"] = false
                     server_model.notifyMonitor();
                     server_model.json_state["gama"]["content_error"] = ""
-                    
                     throw "A problem appeared in the last message. Please check the response from the Server"
                 }
             }

@@ -70,9 +70,17 @@ class VrServer {
         for (var id_vr in this.server_model.json_simulation) {
             if (this.server_model.json_simulation[id_vr] != undefined && id_vr != "count" && id_vr != "random_content") {
                 const index = vr_socket_clients_id.indexOf(id_vr)
-                vr_socket_clients[index].send(JSON.stringify(this.server_model.json_simulation[id_vr]))
+                const json_simulation_vr = this.server_model.json_simulation[id_vr];
+                json_simulation_vr.type = "json_simulation"
+                vr_socket_clients[index].send(JSON.stringify(json_simulation_vr))
             } 
         }
+    }
+
+    broadcastJsonStateVr() {
+        vr_socket_clients.forEach((client) => {
+            client.send(JSON.stringify(this.server_model.json_state));
+        })
     }
 }
 
