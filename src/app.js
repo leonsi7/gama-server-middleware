@@ -11,54 +11,31 @@ class App {
         this.app_port = server_model.json_state.app_port != undefined ? server_model.json_state.app_port : DEFAULT_APP_PORT;
         
         const app = express();
-        app.use(express.static('public'));
-
-        app.get('/monitor', (req, res) => {
-            fs.readFile('public/monitor.html', 'utf-8', (err, data) => {
-              if(err) {
-                console.log(err);
-                res.status(500).send('Server error')
-              } else {
+        app.use(express.static('views/monitor'));
+        app.use(express.static('views/public'));
+        app.use(express.static('views/game'));
         
-                res.send(data)
-              }
-            })
-          })
+        
+        app.get('/monitor', (req, res) => {
+          res.sendFile('monitor.html', { root: 'views/monitor' });
+        });
         
         app.get('/game', (req, res) => {
-          fs.readFile('public/game.html', 'utf-8', (err, data) => {
-              if(err) {
-              console.log(err);
-              res.status(500).send('Server error')
-              } else {
-          
-              res.send(data)
-              }
-            });
+          res.sendFile('game.html', { root: 'views/game' });
         });
 
         app.get('/home', (req, res) => {
-          fs.readFile('public/home.html', 'utf-8', (err, data) => {
-            if(err) {
-            console.log(err);
-            res.status(500).send('Server error')
-            } else {
-        
-            res.send(data)
-            }
-            });
+          res.sendFile('home.html', { root: 'views/public' });
         });
         
-
         app.get('/favicon.ico', (req, res) => {
-          res.sendFile('/public/favicon.ico');
+          res.sendFile('favicon.ico', { root: 'views/public' });
         });
 
         app.get('/', (req, res) => {
           res.redirect('/home');
         });
 
-          
         app.listen(this.app_port, () => {
             console.log(`Listening on port ${this.app_port}`)
         });

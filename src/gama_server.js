@@ -181,6 +181,9 @@ class ConnectorGamaServer {
                     server_model.notifyVrClients();
 
                 }
+                else {
+                    if (data.content != String({ message: '{}', color: null })) console.log(data);
+                }
                 if (data.type == "CommandExecutedSuccessfully") {
                     if (data.command != undefined && data.command.type == "load") server_model.json_state.gama.experiment_id = data.content
                     continue_sending = true
@@ -193,6 +196,7 @@ class ConnectorGamaServer {
                     server_model.json_state["gama"]["loading"] = false
                     server_model.notifyMonitor();
                     server_model.json_state["gama"]["content_error"] = ""
+
                     throw "A problem appeared in the last message. Please check the response from the Server"
                 }
             }

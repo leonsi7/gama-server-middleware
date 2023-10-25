@@ -1,7 +1,7 @@
 {
     "type":"json_state",
 
-    "gama_ws_port":1000,
+    "gama_ws_port":6869,
     "monitor_ws_port":80,
     "vr_ws_port":8080,
     "app_port":8000,

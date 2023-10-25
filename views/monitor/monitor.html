@@ -5,41 +5,227 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VR-model monitor</title>
+    <style>
+    /* Styles de base */
+    body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 28px;
+            color: #ffffff;
+            margin: 20px 0 0;
+        }
+
+        h2 {
+            font-size: 20px;
+            color: #0074d9;
+            margin: 20px 0;
+        }
+
+        /* Barres pour les sections */
+        h2.with-bar {
+            position: relative;
+        }
+
+        h2.with-bar::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: #0074d9;
+        }
+
+        /* Styles spécifiques pour "VR Headset" */
+        .vr-section {
+            color: blue;
+            font-size: 16px;
+        }
+
+        /* Styles pour les boutons "Add" et "Remove" */
+        button.add,
+        button.remove {
+            background-color: #0074d9;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        button.add:hover,
+        button.remove:hover {
+            background-color: #0056a1;
+        }
+
+        button[disabled] {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* Styles pour l'en-tête en mode desktop */
+        header {
+            display: block;
+            background-color: #0074d9;
+            color: #fff;
+            padding: 10px 20px;
+            font-size: 20px;
+            width: 100%;
+        }
+
+        /* Réponses aux tailles d'écran spécifiques */
+        @media (max-width: 767px) {
+            /* Styles pour les sections en mode mobile (téléphone ou tablette) */
+            .section {
+                width: 100%;
+            }
+        }
+
+        @media (min-width: 768px) {
+            /* Styles pour les sections en mode desktop */
+            .sections {
+                display: flex;
+                justify-content: space-between;
+                width: 80%;
+                margin-top: 20px;
+            }
+
+            .gama-section {
+                width: 48%;
+                padding: 20px;
+                box-sizing: border-box;
+            }
+
+            .vr-section {
+                width: 48%;
+                padding: 20px;
+                box-sizing: border-box;
+            }
+        }
+        .vr_li {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+        }
+        
+        #gama-loading::before {
+            
+            content: "";
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #0074d9;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 2s linear infinite;
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+.vr_id {
+    font-weight: bold;
+}
+
+.date_vr {
+    font-style: italic;
+    margin-left: 10px;
+}
+
+span.color-orange {
+    color: orange;
+}
+
+span.color-green {
+    color: green;
+}
+
+span.color-red {
+    color: red;
+}
+
+/* Styles for the "Add" button */
+.button-add {
+    margin: 5px;
+    padding: 5px 10px;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.button-add:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.button-add:hover {
+    background-color: #0056b3;
+}
+
+/* Styles for the "Remove" button */
+.button-remove {
+    margin: 5px;
+    padding: 5px 10px;
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.button-remove:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.button-remove:hover {
+    background-color: #a8252f;
+}
+
+
+    </style>
 </head>
 
 <body>
-    <h1>Gama Server Linker - Monitor page</h1>
-    <p id="connection-state" style="display:none;"></p>
+    <header>
+        <h1>VR-model Monitor</h1>
+    </header>
 
-    <div id="main-display">
+    <div class="sections">
+        <div class="gama-section">
+            <h2 class="with-bar">Gama Server</h2>
+            <p id="connection-state" style="display:none;"></p>
+            <button class="add" id="try-connection">Try Connection</button>
+            <p id="gama-connection-state">&#x274C; Not Connected</p>
+            <p id="simulation-launched">&#x274C; The Simulation is Not Launched</p>
+            <button class="add" id="start-simulation">Launch the Simulation</button>
+            <button class="remove" id="stop-simulation">Stop the Simulation</button>
+            <p id="gama-loading" disabled=true></p>
+        </div>
 
-        <h2>Gama Server</h2>
-
-        <p>
-            <span><button id="try-connection">Try connection</button></span>
-            <span id="gama-loading"></span>
-        </p>
-        
-        <li id="gama-connection-state">&#x274C; Not connected</li>
-        <li id="simulation-launched">&#x274C; The simulation is not launched</li>
-        
-        
-        <p>
-            <span><button id="start-simulation">Launch the simulation</button></span>
-            <span><button id="stop-simulation">Stop the simulation</button></span>
-        </p>
-        
-        <h2>VR headset</h2>
-        <p style="color:blue;">&#9432; Add & Remove buttons allows the VR Headset to be authentified or not to the Gama Simulation</p>
-        <p>
-            <span id="vr-loading"></span>
-        </p>
-        <ul id="vr-container">
-
-        </ul>
-
+        <div class="vr-section">
+            <h2 class="with-bar">VR Headset</h2>
+            <p style="color: blue;">&#9432; Add & Remove buttons allow the VR Headset to be authenticated or not to the Gama Simulation</p>
+            <p id="vr-loading"></p>
+            <ul id="vr-container"></ul>
+        </div>
     </div>
-
 
     <script>
         const hostname = window.location.hostname;
@@ -48,6 +234,7 @@
         socket.onopen = function() {
             
         };
+
 
         socket.onmessage = function(event){
             const json_state = JSON.parse(event.data)
@@ -62,7 +249,8 @@
             document.querySelector("#simulation-launched").innerHTML = json_state["gama"]["launched_experiment"] ? "&#10004; Simulation launched": "&#x274C; The simulation is not launched"
             document.querySelector("#simulation-launched").style = json_state["gama"]["launched_experiment"] ? "color:green;": "color:red;"
 
-            document.querySelector("#gama-loading").innerHTML = json_state["gama"]["loading"] ? "   Loading...": ""
+            document.querySelector("#gama-loading").innerHTML = json_state["gama"]["loading"] ? "   Loading...": " "
+            document.querySelector("#gama-loading::before").disabled = json_state["gama"]["loading"] ? false : true;
             document.querySelector("#gama-loading").innerHTML = json_state["gama"]["content_error"] == "" ? document.querySelector("#gama-loading").innerHTML : json_state["gama"]["content_error"]
             document.querySelector("#gama-loading").style = json_state["gama"]["content_error"] == "" ? "" : "color:red;"
 
@@ -84,9 +272,14 @@
                 vr_button_remove_span.appendChild(vr_button_remove)
                 vr_button_remove.innerHTML = "Remove"
                 vr_button_remove.disabled = true
-                const vr_li = document.createElement('li')
+                const vr_li = document.createElement('p')
+                vr_li.classList.add("vr_li")
                 const vr_id = document.createElement('span')
+                vr_id.classList.add("vr_id")
                 const date_vr = document.createElement('span')
+                date_vr.classList.add("date_vr")
+                vr_button_add.classList.add("button-add"); // Ajoutez une classe "button-add" au bouton "Add"
+                vr_button_remove.classList.add("button-remove");
                 if (json_state["vr"][element]["state"] == "connected") {
 
                     if (json_state["vr"][element]["authentified"] == false) {
