@@ -8,11 +8,15 @@ const fs = require('fs');
 class ServerModel {
     constructor() {
         this.json_state = JSON.parse(fs.readFileSync('json_state.json', 'utf-8'));
+        this.json_settings = JSON.parse(fs.readFileSync('settings.json', 'utf-8'));
         this.json_simulation = {};
         this.monitor_server = new MonitorServer(this);
         this.vr_server = new VrServer(this);
         this.app = new App(this);
         this.gama_connector = new ConnectorGamaServer(this);
+    }
+    changeJsonSetting(json_settings){
+        this.json_settings = json_settings
     }
 
     notifyMonitor() {

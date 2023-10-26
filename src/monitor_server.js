@@ -9,7 +9,7 @@ var monitor_socket_clients = []
 class MonitorServer {
     constructor(server_model) {
         this.server_model = server_model;
-        this.monitor_ws_port = server_model.json_state.monitor_ws_port != undefined ? server_model.json_state.monitor_ws_port : DEFAULT_MONITOR_WS_PORT;
+        this.monitor_ws_port = server_model.json_settings.monitor_ws_port != undefined ? server_model.json_settings.monitor_ws_port : DEFAULT_MONITOR_WS_PORT;
         this.monitor_socket = new WebSocket.Server({ port: this.monitor_ws_port });
 
         this.monitor_socket.on('connection', function connection(ws) {
@@ -23,6 +23,7 @@ class MonitorServer {
                 else if (type == "try_connection") server_model.connectGama()
                 else if (type == "add_vr_headset") server_model.addNewVrHeadset(json_monitor["id"])
                 else if (type == "remove_vr_headset") server_model.removeVrHeadset(json_monitor["id"])
+                else if (type == "json_setting") server_model.chqngeJsonSetting(json_monitor)
             })
         });
     }
