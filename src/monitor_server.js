@@ -15,6 +15,7 @@ class MonitorServer {
         this.monitor_socket.on('connection', function connection(ws) {
             monitor_socket_clients.push(ws)
             server_model.notifyMonitor();
+            server_model.sendJsonSettings()
             ws.on('message', function incoming(message) {
                 const json_monitor = JSON.parse(message)
                 const type = json_monitor['type']
@@ -23,14 +24,20 @@ class MonitorServer {
                 else if (type == "try_connection") server_model.connectGama()
                 else if (type == "add_vr_headset") server_model.addNewVrHeadset(json_monitor["id"])
                 else if (type == "remove_vr_headset") server_model.removeVrHeadset(json_monitor["id"])
-                else if (type == "json_setting") server_model.chqngeJsonSetting(json_monitor)
+                else if (type == "json_settings") server_model.changeJsonSettings(json_monitor)
             })
         });
     }
 
-    sendMonitorInformation() {
+    sendMonitorJsonState() {
         if (monitor_socket_clients != undefined) monitor_socket_clients.forEach((client) => {
             client.send(JSON.stringify(this.server_model.json_state));
+        })
+    }
+
+    sendMonitorJsonSettings() {
+        if (monitor_socket_clients != undefined) monitor_socket_clients.forEach((client) => {
+            client.send(JSON.stringify(this.server_model.json_settings));
         })
     }
 

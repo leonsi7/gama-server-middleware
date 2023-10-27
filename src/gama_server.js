@@ -31,8 +31,8 @@ class ConnectorGamaServer {
         server_model_copy = server_model;
         this.gama_ws_port = this.server_model.json_settings.gama_ws_port != undefined ? this.server_model.json_settings.gama_ws_port : DEFAULT_GAMA_WS_PORT;
         this.gama_error_messages = gama_error_messages;
-        model_file = this.server_model.json_settings.model_file_absolute != "" ? this.server_model.json_settings.model_file_absolute : process.cwd() + this.server_model.json_settings.model_file_relative
-        this.connectGama();
+        model_file = this.server_model.json_settings.type_model_file_path == "absolute" ? this.server_model.json_settings.model_file_path : process.cwd() + this.server_model.json_settings.model_file_path
+        this.gama_socket = this.connectGama();
     }
 
     /* Protocol messages about Gama Server */
@@ -165,7 +165,7 @@ class ConnectorGamaServer {
         this.server_model.notifyMonitor();
         const server_model = this.server_model;
         const sendMessages = this.sendMessages;
-        gama_socket = new WebSocket("ws://"+this.server_model.json_settings.ip_adress_gama_server+":"+this.gama_ws_port);
+        gama_socket = new WebSocket("ws://"+this.server_model.json_settings.ip_address_gama_server+":"+this.gama_ws_port);
     
         gama_socket.onopen = function() {
             console.log("Connected to Gama Server");
@@ -230,6 +230,10 @@ class ConnectorGamaServer {
         
         this.server_model.json_state["gama"]["loading"] = false
         this.server_model.notifyMonitor();
+        return gama_socket
+    }
+    close(){
+        this.gama_socket.close()
     }
 }
 

@@ -10,7 +10,7 @@
 
 <body>
     <header>
-        <h1>Gama Server Linker - Monitor Panel</h1>
+        <h1>Gama Server Linker</h1>
     </header>
 
     <nav class="navbar">
@@ -21,17 +21,21 @@
         </ul>
     </nav>
 
+    <p id="connection-state" style="display:none;"></p>
+
     <div class="sections">
+        
         <div class="gama-section">
             <h2 class="with-bar">Gama Server</h2>
-            <p id="connection-state" style="display:none;"></p>
+            
             <button class="default-button" id="try-connection">Try Connection</button>
             <p id="gama-connection-state">&#x274C; Not Connected</p>
             <p id="simulation-launched">&#x274C; The Simulation is Not Launched</p>
-            <p id="gama-loader"></p>
+            
             <div id="simulation-controls">
                 <button class="default-button" id="start-simulation">Launch the Simulation</button>
                 <button class="default-button" id="stop-simulation">Stop the Simulation</button>
+                <p id="gama-loader"></p>
             </div>
         </div>
         <div class="vr-section">

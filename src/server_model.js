@@ -15,12 +15,25 @@ class ServerModel {
         this.app = new App(this);
         this.gama_connector = new ConnectorGamaServer(this);
     }
-    changeJsonSetting(json_settings){
+
+    restart(){
+        this.vr_server.close()
+        this.gama_connector.close()
+        this.vr_server = new VrServer(this);
+        this.gama_connector = new ConnectorGamaServer(this);
+    }
+    changeJsonSettings(json_settings){
         this.json_settings = json_settings
+        fs.writeFileSync('settings.json', JSON.stringify(json_settings,null, 2), 'utf-8')
+        this.restart()
+    }
+
+    sendJsonSettings() {
+        this.monitor_server.sendMonitorJsonSettings();
     }
 
     notifyMonitor() {
-        this.monitor_server.sendMonitorInformation();
+        this.monitor_server.sendMonitorJsonState();
         this.vr_server.broadcastJsonStateVr()
     }
 

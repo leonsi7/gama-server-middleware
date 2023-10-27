@@ -8,7 +8,7 @@
 </head>
 <body>
     <header>
-        <h1>Gama Server Linker - Settings Panel</h1>
+        <h1>Gama Server Linker</h1>
     </header>
 
     <nav class="navbar">
@@ -19,44 +19,65 @@
         </ul>
     </nav>
 
-    <form id="json-form">
-        <div class="field">
-        <label for="gama-ws-port">GAMA WS Port:</label>
-        <input type="number" id="gama-ws-port" name="gama_ws_port">
-        </div>
-        
-        <div class="field">
-        <label for="monitor-ws-port">Monitor WS Port:</label>
-        <input type="number" id="monitor-ws-port" name="monitor_ws_port">
-        </div>
-    
-        <div class="field">
-        <label for="vr-ws-port">VR WS Port:</label>
-        <input type="number" id="vr-ws-port" name="vr_ws_port">
-        </div> 
+    <p id="connection-state" style="display:none;"></p>
 
-        <div class="field">
-        <label for="app-port">App Port:</label>
-        <input type="number" id="app-port" name="app_port">
-        </div>
+    <section class="container">
+    <div class="form-container">
 
-        <div class="field">
-        <label for="model-file-relative">Model File Relative Path:</label>
-        <input type="text" id="model-file-relative" name="model_file_relative">
-        </div>
+        <form id="json-form">
 
-        <div class="field">
-        <label for="model-file-absolute">Model File Absolute Path:</label>
-        <input type="text" id="model-file-absolute" name="model_file_absolute">
-        </div>
+            <h2 class="with-bar">About GAMA</h2>
 
-        <div class="field">
-        <label for="ip-address-gama-server">IP Address GAMA Server:</label>
-        <input type="text" id="ip-address-gama-server" name="ip_address_gama_server">
+            <div class="field">
+                <label for="gama-ws-port">GAMA Server websocket port</label>
+                <input type="number" id="gama-ws-port" name="gama_ws_port">
+            </div>
+
+            <div class="field">
+                <label for="model-file-path">Model file path</label>
+                <input type="text" id="model-file-path" name="model_file_path">
+            </div>
+
+            <div class="field">
+                <label for="model-file-path-type">Path type</label>
+                <select id="model-file-path-type" name="model_file_path_type">
+                    <option>Absolute</option>
+                    <option>Relative</option>
+                </select>
+            </div>
+
+            
+
+            <div class="field">
+                <label for="ip-address-gama-server">IP address GAMA Server</label>
+                <input type="text" id="ip-address-gama-server" name="ip_address_gama_server">
+            </div>
+
+            <h2 class="with-bar">About Players</h2>
+
+            <div class="field">
+                <label for="vr-ws-port">VR websocket Port</label>
+                <input type="number" id="vr-ws-port" name="vr_ws_port">
+            </div> 
+
+            <h2 class="with-bar">About Monitor</h2>
+
+            <div class="field">
+                <label for="monitor-ws-port">Monitor websocket Port</label>
+                <input type="number" id="monitor-ws-port" name="monitor_ws_port" readonly>
+            </div>
+
+            <div class="field">
+                <label for="app-port">Application port</label>
+                <input type="number" id="app-port" name="app_port" readonly>
+            </div>
+
+            <div class="button">
+            <input class="default-button" type="submit" value="Save changes & Restart">
+            </div>
         </div>
-        
-        <input class="default-button" type="submit" value="Save JSON">
-    </form>
+        </form>
+    </section>
     
     <script src="settings.js"></script>
 </body>

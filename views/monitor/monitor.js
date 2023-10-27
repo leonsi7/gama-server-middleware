@@ -63,41 +63,49 @@ socket.onmessage = function(event){
             date_vr.classList.add("date_vr")
             vr_button_add.classList.add("button-vr-add"); // Ajoutez une classe "button-add" au bouton "Add"
             vr_button_remove.classList.add("button-vr-remove");
-            if (json_state["vr"][element]["state"] == "connected") {
-                if (json_state["vr"][element]["authentified"] == false) {
-                    vr_id.innerHTML = "   ID: "+ String(element)
-                    vr_li.style = "color:orange;"
-                    date_vr.innerHTML = " - Connected at: " + json_state["vr"][element]["date_connection"] + " - Status: Unauthentified"
-                    if (json_state["gama"]["launched_experiment"] == true) {
-                        vr_button_add.disabled = false
-                        vr_button_remove.disabled = true
+            if (json_state["gama"]["launched_experiment"] == true) {
+                if (json_state["vr"][element]["authentified"]) {
+                    vr_button_add.disabled = true
+                    vr_button_remove.disabled = false
+                    if (json_state["vr"][element]["state"] == "connected"){
+                        vr_id.innerHTML = "&#10004; ID: "+ String(element)
+                        vr_li.style = "color:green;"
+                        date_vr.innerHTML = " - Connected at: " + json_state["vr"][element]["date_connection"] + " - Status: Authentified"
+                    }
+                    else {
+                        vr_id.innerHTML = "   &#x274C; ID: "+ String(element)
+                        vr_li.style = "color:red;"
+                        date_vr.innerHTML = " - Last connection at: " + json_state["vr"][element]["date_connection"] + " - Status: Authentified"
                     }
                 }
                 else {
-                    vr_id.innerHTML = "   &#10004; ID: "+ String(element)
-                    vr_li.style = "color:green;"
-                    date_vr.innerHTML = " - Connected at: " + json_state["vr"][element]["date_connection"] + " - Status: Authentified"
-                    if (json_state["gama"]["launched_experiment"] == true) {
-                        vr_button_add.disabled = true
-                        vr_button_remove.disabled = false
+                    vr_button_add.disabled = false
+                    vr_button_remove.disabled = true
+                    if (json_state["vr"][element]["state"] == "connected"){
+                        vr_id.innerHTML = "ID: "+ String(element)
+                        vr_li.style = "color:orange;"
+                        date_vr.innerHTML = " - Connected at: " + json_state["vr"][element]["date_connection"] + " - Status: Unauthentified"
+                    }
+                    else {
+                        vr_id.innerHTML = "   &#x274C; ID: "+ String(element)
+                        vr_li.style = "color:red;"
+                        date_vr.innerHTML = " - Last connection at: " + json_state["vr"][element]["date_connection"] + " - Status: Unauthentified"
                     }
                 }
             }
-
-            else if (json_state["vr"][element]["state"] == "unconnected") {
-                vr_id.innerHTML = "   &#x274C; ID: "+ String(element)
-                vr_li.style = "color:red;"
-                if (json_state.vr[element].authentified == true) {
-                    date_vr.innerHTML = " - Last connection at: " + json_state["vr"][element]["date_connection"] + " - Status: Authentified"
-                    vr_button_add.disabled = true
-                    vr_button_remove.disabled = false
+            else {
+                vr_button_add.disabled = true
+                vr_button_remove.disabled = true
+                if (json_state["vr"][element]["state"] == "connected"){
+                    vr_id.innerHTML = "ID: "+ String(element)
+                    vr_li.style = "color:orange;"
+                    date_vr.innerHTML = " - Connected at: " + json_state["vr"][element]["date_connection"] + " - Status: Unauthentified"
                 }
                 else {
-                    date_vr.innerHTML = " - Last connection at: " + json_state["vr"][element]["date_connection"] + " - Status: Unauthentified"
-                    vr_button_add.disabled = false
-                    vr_button_remove.disabled = true
+                    vr_id.innerHTML = "   &#x274C; ID: "+ String(element)
+                        vr_li.style = "color:red;"
+                        date_vr.innerHTML = " - Last connection at: " + json_state["vr"][element]["date_connection"] + " - Status: Unauthentified"
                 }
-                
             }
             
             document.querySelector("#vr-container").appendChild(vr_li)
@@ -132,7 +140,7 @@ document.querySelector("#stop-simulation").addEventListener('click', () => {
 socket.addEventListener('close', (event) => {
     document.querySelector("#connection-state").innerHTML = "&#x274C; The central server disconnected ! Please refresh this page when the server came back to work"
     document.querySelector("#connection-state").style = "color:red;"
-    document.querySelector("#main-display").style.display = "none"
+    document.querySelector(".sections").style = "display:none;"
 
     if (event.wasClean) {
         console.log('The WebSocket connection with Gama Server was properly be closed');
@@ -145,6 +153,6 @@ socket.addEventListener('close', (event) => {
 socket.addEventListener('error', (error) => {
     document.querySelector("#connection-state").innerHTML = "&#x274C; The cetral server disconnected ! Please refresh this page when the server came back to work"
     document.querySelector("#connection-state").style = "color:red;"
-    document.querySelector("#main-display").style.display = "none"
+    document.querySelector(".sections").style = "display:none;"
 });
 
