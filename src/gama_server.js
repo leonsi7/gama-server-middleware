@@ -177,7 +177,6 @@ class ConnectorGamaServer {
         gama_socket.onmessage = function(event) {
             try {
                 const data = JSON.parse(event.data)
-                console.log(data);
                 if (data.type == "SimulationOutput" && data.content != String({ message: '{}', color: null })) {
                     const cleaned_string = data.content.toString().substring(13,data.content.toString().length -15)
                     server_model.json_simulation = JSON.parse(cleaned_string)
@@ -188,11 +187,13 @@ class ConnectorGamaServer {
                     if (data.content != String({ message: '{}', color: null })) console.log(data);
                 }
                 if (data.type == "CommandExecutedSuccessfully") {
+                    console.log(data);
                     if (data.command != undefined && data.command.type == "load") server_model.json_state.gama.experiment_id = data.content
                     continue_sending = true
                     setTimeout(sendMessages,300)
                 }
                 if (gama_error_messages.includes(data.type)) {
+                    console.log(data);
                     var command_type
                     if (data.command != undefined) command_type = data.command.type
                     server_model.json_state["gama"]["content_error"] = data.type + " for the command: "+ command_type
