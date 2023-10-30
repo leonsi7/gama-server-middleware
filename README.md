@@ -31,7 +31,7 @@ When a player connects, you will see it on the monitor page and you can add it o
 
 You can see below the schema of the operation of the server. The server magages the several connections and authenticate the players to Gama.
 
-![Operating schema](https://github.com/leonsi7/gama-server-middleware/assets/104212258/1b5cd07b-3726-4b06-badc-aa8bfa7fa146)![Blank diagram(1)](https://github.com/leonsi7/gama-server-middleware/assets/104212258/7a551296-5b7c-4dd6-aed8-7a12d9600af1)
+![Operating schema](https://github.com/leonsi7/gama-server-middleware/assets/104212258/1b5cd07b-3726-4b06-badc-aa8bfa7fa146)
 
 
 ## Create your own game
