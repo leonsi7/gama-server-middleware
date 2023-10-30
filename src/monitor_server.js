@@ -22,8 +22,8 @@ class MonitorServer {
                 if (type == "launch_experiment") server_model.launchExperiment()
                 else if (type == "stop_experiment") server_model.stopExperiment()
                 else if (type == "try_connection") server_model.connectGama()
-                else if (type == "add_vr_headset") server_model.addNewVrHeadset(json_monitor["id"])
-                else if (type == "remove_vr_headset") server_model.removeVrHeadset(json_monitor["id"])
+                else if (type == "add_player_headset") server_model.addNewPlayerHeadset(json_monitor["id"])
+                else if (type == "remove_player_headset") server_model.removePlayerHeadset(json_monitor["id"])
                 else if (type == "json_settings") server_model.changeJsonSettings(json_monitor)
             })
         });
@@ -40,7 +40,9 @@ class MonitorServer {
             client.send(JSON.stringify(this.server_model.json_settings));
         })
     }
-
+    close() {
+        this.monitor_socket.close()
+    }
     
 }
 

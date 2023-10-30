@@ -24,10 +24,20 @@ helpLink.addEventListener("click", function(event) {
 
 
 document.addEventListener("DOMContentLoaded", function() {
-    const jsonForm = document.getElementById("json-form");
 
+    fetch('/getWsMonitorPort')
+      .then(response => response.json())
+      .then(data => {
+        createWebSocket(data.monitor_ws_port)
+      });
+
+});
+
+  
+function createWebSocket(monitor_ws_port) {
+    const jsonForm = document.getElementById("json-form");
     const hostname = window.location.hostname;
-    const socket = new WebSocket('ws://'+hostname+':80');
+    const socket = new WebSocket('ws://'+hostname+':'+monitor_ws_port);
 
     socket.onopen = function() {
     };
@@ -86,4 +96,4 @@ document.addEventListener("DOMContentLoaded", function() {
         document.querySelector("#connection-state").style = "color:red;"
         document.querySelector(".container").style = "display:none;"
     });
-});
+}

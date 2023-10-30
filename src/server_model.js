@@ -7,7 +7,7 @@ const fs = require('fs');
 
 class ServerModel {
     constructor() {
-        this.json_state = JSON.parse(fs.readFileSync('json_state.json', 'utf-8'));
+        this.json_state = JSON.parse(fs.readFileSync('src/json_state.json', 'utf-8'));
         this.json_settings = JSON.parse(fs.readFileSync('settings.json', 'utf-8'));
         this.json_simulation = {};
         this.monitor_server = new MonitorServer(this);
@@ -19,8 +19,10 @@ class ServerModel {
     restart(){
         this.player_server.close()
         this.gama_connector.close()
+        this.monitor_server.close()
         this.player_server = new PlayerServer(this);
         this.gama_connector = new ConnectorGamaServer(this);
+        this.monitor_server = new MonitorServer(this);
     }
     changeJsonSettings(json_settings){
         this.json_settings = json_settings
@@ -35,7 +37,6 @@ class ServerModel {
     notifyMonitor() {
         this.monitor_server.sendMonitorJsonState();
         this.player_server.broadcastJsonStatePlayer();
-        console.log(this.json_state);
     }
 
     notifyPlayerClients() {

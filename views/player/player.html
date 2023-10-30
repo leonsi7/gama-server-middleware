@@ -78,19 +78,6 @@ p {
     stroke-width: 2;
 }
 
-#change-pos {
-    background-color: #0074d9;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    font-size: 16px;
-    margin-top: 20px;
-}
-
-#change-pos:hover {
-    background-color: #0056a1;
-}
 
 #new_x, #new_y {
     width: 50px;
@@ -117,9 +104,6 @@ p {
     }
     p {
         font-size: 16px;
-    }
-    #change-pos {
-        font-size: 14px;
     }
 }
 
@@ -157,12 +141,6 @@ p {
                 <!-- Ajoutez un rectangle pour le cadre -->
                 <rect id="graph-frame" width="400" height="400" fill="none" stroke="black" stroke-width="2"></rect>
             </svg>
-
-        <h2>Change position:</h2>
-
-            <p><span>X: </span><span><input id="new_x"></span></p>
-            <p><span>Y: </span><span><input id="new_y"></span></p>
-            <button id="change-pos">Change position</button>
 
     <script>
 
@@ -208,7 +186,7 @@ p {
                 if (json.type == "json_state") {
                     
                     json_state = json;
-                    const authentified = json_state.vr[id_unique].authentified;
+                    const authentified = json_state.player[id_unique].authentified;
                     document.querySelector("#authentification-state").innerHTML = authentified ? "&#10004; Authentified to Gama Server" : "&#x274C; Unauthentified to Gama Server, please wait"
                     document.querySelector("#authentification-state").style = authentified ? "color:green;" : "color:red;";
                 }
@@ -247,24 +225,6 @@ p {
                 document.querySelector("#connection-state").innerHTML = "&#x274C; The cetral server disconnected ! Please refresh this page when the server came back to work"
                 document.querySelector("#connection-state").style = "color:red;font-weight: bold;"
             });
-
-            document.getElementById("change-pos").addEventListener("click", function() {
-                let newX = document.querySelector("#new_x").value;
-                let newY = document.querySelector("#new_y").value;
-
-                // Vérifiez si les valeurs sont numériques avant de les envoyer
-                if (!isNaN(newX) && !isNaN(newY)) {
-                    let pos = [Number(newX), Number(newY)];
-                    socket.send(pos.join(";"));
-                    console.log(newX);
-                    console.log(newY);
-                    document.querySelector("#new_x").value = '';
-                    document.querySelector("#new_y").value = '';
-                } else {
-                    // Gérez ici le cas où les valeurs ne sont pas numériques
-                    alert("Veuillez entrer des valeurs numériques valides.");
-                }
-            })
         }
     </script>
 </body>

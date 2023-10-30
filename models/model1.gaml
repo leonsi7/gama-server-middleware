@@ -15,30 +15,30 @@ global {
 	reflex  send_simulation_info when:every(1 #cycle){
 		map<string, unknown> json;
 		map<string, unknown> sending_message;
-		loop vr_headset over:VrHeadset {
-			if(vr_headset.isAlive){
+		loop player_headset over:PlayerHeadset {
+			if(player_headset.isAlive){
 				map<string,unknown> info_json;
 				map<string, unknown> location_json;
-				location_json["x"] <- vr_headset.location.x;
-				location_json["y"] <- vr_headset.location.y;
+				location_json["x"] <- player_headset.location.x;
+				location_json["y"] <- player_headset.location.y;
 				info_json["position"] <- location_json;
-				json[vr_headset.id] <- info_json;
+				json[player_headset.id] <- info_json;
 			
 			}
 		}
 		write as_json_string(json);
 	}
 	
-	action removeVrHeadset(string id_vr) {
-		loop vr_headset over: VrHeadset {
-			if (vr_headset.id = id_vr){
-				vr_headset.isAlive <- false;
+	action removePlayerHeadset(string id_player) {
+		loop player_headset over: PlayerHeadset {
+			if (player_headset.id = id_player){
+				player_headset.isAlive <- false;
 			}
 		}
 	}
 }
 
-species VrHeadset skills:[moving] {
+species PlayerHeadset skills:[moving] {
 	
 	string id;
 	rgb color <- rgb(rnd(0,255),rnd(0,255),rnd(0,255));
@@ -65,7 +65,7 @@ experiment test type:gui {
     float minimum_cycle_duration <- 0.03 #second;
     output {
     	display map {
-			species VrHeadset aspect: base;
+			species PlayerHeadset aspect: base;
 		}
     }
 }
