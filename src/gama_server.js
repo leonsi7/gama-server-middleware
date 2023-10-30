@@ -11,7 +11,7 @@ var continue_sending = false;
 var do_sending = false;
 var list_messages;
 var function_to_call;
-var current_id_vr;
+var current_id_player;
 
 var server_model_copy;
 var model_file;
@@ -58,20 +58,20 @@ class ConnectorGamaServer {
             "exp_id": server_model_copy.json_state.gama.experiment_id,
         }
     }
-    add_vr_headset() {
+    add_player_headset() {
         return  {
             "type": "expression",
             "content": "Add a new VR headset", 
             "exp_id": server_model_copy.json_state.gama.experiment_id,
-            "expr": "create VrHeadset { id <- \""+current_id_vr+"\"; }"
+            "expr": "create PlayerHeadset { id <- \""+current_id_player+"\"; }"
         }
     }
-    remove_vr_headset() {
+    remove_player_headset() {
         return  {
             "type": "expression",
             "content": "Remove a VR Headset", 
             "exp_id": server_model_copy.json_state.gama.experiment_id,
-            "expr": "do removeVrHeadset(\""+current_id_vr+"\");"
+            "expr": "do removePlayerHeadset(\""+current_id_player+"\");"
         }
     }
 
@@ -123,8 +123,8 @@ class ConnectorGamaServer {
             function_to_call = () => {
                 this.server_model.json_state["gama"]["launched_experiment"] = false
                 this.server_model.json_state["gama"]["loading"] = false
-                this.server_model.json_state["vr"]["id_connected"].forEach(id_vr => {
-                    this.server_model.json_state["vr"][id_vr]["authentified"] = false
+                this.server_model.json_state["player"]["id_connected"].forEach(id_player => {
+                    this.server_model.json_state["player"][id_player]["authentified"] = false
                 });
                 this.server_model.notifyMonitor();
             }
@@ -132,29 +132,29 @@ class ConnectorGamaServer {
         }
     }
 
-    addNewVrHeadset(id_vr) {
+    addNewPlayerHeadset(id_player) {
         if (this.server_model.json_state["gama"]["launched_experiment"] == false) return
-        current_id_vr = id_vr
-        list_messages = [this.add_vr_headset];
+        current_id_player = id_player
+        list_messages = [this.add_player_headset];
         index_messages = 0;
         do_sending = true;
         continue_sending = true;
         function_to_call = () => {
-            this.server_model.json_state["vr"][id_vr]["authentified"] = true
+            this.server_model.json_state["player"][id_player]["authentified"] = true
             this.server_model.notifyMonitor();
         }
         this.sendMessages()
     }
 
-    removeVrHeadset(id_vr) {
-        current_id_vr = id_vr
-        list_messages = [this.remove_vr_headset];
+    removePlayerHeadset(id_player) {
+        current_id_player = id_player
+        list_messages = [this.remove_player_headset];
         index_messages = 0;
         do_sending = true;
         continue_sending = true;
         function_to_call = () => {
-            console.log("The Vr headset: "+id_vr+" has been removed from Gama");
-            this.server_model.json_state["vr"][id_vr]["authentified"] = false
+            console.log("The Player headset: "+id_player+" has been removed from Gama");
+            this.server_model.json_state["player"][id_player]["authentified"] = false
             this.server_model.notifyMonitor();
         }
         this.sendMessages()
@@ -180,7 +180,7 @@ class ConnectorGamaServer {
                 if (data.type == "SimulationOutput" && data.content != String({ message: '{}', color: null })) {
                     const cleaned_string = data.content.toString().substring(13,data.content.toString().length -15)
                     server_model.json_simulation = JSON.parse(cleaned_string)
-                    server_model.notifyVrClients();
+                    server_model.notifyPlayerClients();
 
                 }
                 else {
@@ -213,8 +213,8 @@ class ConnectorGamaServer {
             server_model.json_state["gama"]["connected"] = false;
             server_model.json_state["gama"]["launched_experiment"] = false;
             server_model.json_state["gama"]["loading"] = false;
-            server_model.json_state["vr"]["id_connected"].forEach(id_vr => {
-                server_model.json_state["vr"][id_vr]["authentified"] = false;
+            server_model.json_state["player"]["id_connected"].forEach(id_player => {
+                server_model.json_state["player"][id_player]["authentified"] = false;
             });
             server_model.notifyMonitor();
             if (event.wasClean) {

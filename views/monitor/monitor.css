@@ -144,7 +144,7 @@ p {
         box-sizing: border-box;
     }
 
-    .vr-section {
+    .player-section {
         width: 48%;
         padding: 10px;
         box-sizing: border-box;
@@ -187,23 +187,23 @@ p {
 /*VR section*/
 /************/
 
-.vr-section {
+.player-section {
     color: blue;
     font-size: 16px;
 }
 
-.vr_li {
+.player_li {
     margin: 10px 0;
     padding: 10px;
     border: 1px solid #ccc;
     background-color: #f9f9f9;
 }
 
-.vr_id {
+.player_id {
 font-weight: bold;
 }
 
-.date_vr {
+.date_player {
 font-style: italic;
 margin-left: 10px;
 }
@@ -220,7 +220,7 @@ span.color-red {
 color: red;
 }
 
-.button-vr-add {
+.button-player-add {
 margin: 5px;
 padding: 5px 10px;
 background-color: #007BFF;
@@ -229,16 +229,16 @@ border: none;
 cursor: pointer;
 }
 
-.button-vr-add:disabled {
+.button-player-add:disabled {
 background-color: #ccc;
 cursor: not-allowed;
 }
 
-.button-vr-add:hover {
+.button-player-add:hover {
 background-color: #0056b3;
 }
 
-.button-vr-remove {
+.button-player-remove {
 margin: 5px;
 padding: 5px 10px;
 background-color: #dc3545;
@@ -247,12 +247,12 @@ border: none;
 cursor: pointer;
 }
 
-.button-vr-remove:disabled {
+.button-player-remove:disabled {
 background-color: #ccc;
 cursor: not-allowed;
 }
 
-.button-vr-remove:hover {
+.button-player-remove:hover {
 background-color: #a8252f;
 }
 

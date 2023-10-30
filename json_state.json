@@ -9,7 +9,7 @@
         "experiment_id":""
     },
 
-    "vr": {
+    "player": {
         "id_connected":[]
     }
 }

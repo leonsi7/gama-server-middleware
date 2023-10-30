@@ -1,3 +1,5 @@
+const hostname = window.location.hostname;
+
 const monitorLink = document.getElementById("monitor-link");
     monitorLink.addEventListener("click", function(event) {
         event.preventDefault();
@@ -36,7 +38,7 @@ document.addEventListener("DOMContentLoaded", function() {
             const jsonDisplay = document.getElementById("json-form");
             jsonDisplay.elements.gama_ws_port.value = json_settings.gama_ws_port;
             jsonDisplay.elements.monitor_ws_port.value = json_settings.monitor_ws_port;
-            jsonDisplay.elements.vr_ws_port.value = json_settings.vr_ws_port;
+            jsonDisplay.elements.player_ws_port.value = json_settings.player_ws_port;
             jsonDisplay.elements.app_port.value = json_settings.app_port;
             jsonDisplay.elements.model_file_path.value = json_settings.model_file_path;
             jsonDisplay.elements.ip_address_gama_server.value = json_settings.ip_address_gama_server;
@@ -54,7 +56,7 @@ document.addEventListener("DOMContentLoaded", function() {
             type:"json_settings",
             gama_ws_port: parseInt(document.getElementById("gama-ws-port").value),
             monitor_ws_port: parseInt(document.getElementById("monitor-ws-port").value),
-            vr_ws_port: parseInt(document.getElementById("vr-ws-port").value),
+            player_ws_port: parseInt(document.getElementById("player-ws-port").value),
             app_port: parseInt(document.getElementById("app-port").value),
             model_file_path: document.getElementById("model-file-path").value,
             ip_address_gama_server: document.getElementById("ip-address-gama-server").value,

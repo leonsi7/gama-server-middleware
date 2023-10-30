@@ -1,6 +1,6 @@
 const ConnectorGamaServer = require('./gama_server.js');
 const MonitorServer = require('./monitor_server.js');
-const VrServer = require('./vr_server.js');
+const PlayerServer = require('./player_server.js');
 const App = require('./app.js');
 const fs = require('fs');
 
@@ -11,15 +11,15 @@ class ServerModel {
         this.json_settings = JSON.parse(fs.readFileSync('settings.json', 'utf-8'));
         this.json_simulation = {};
         this.monitor_server = new MonitorServer(this);
-        this.vr_server = new VrServer(this);
+        this.player_server = new PlayerServer(this);
         this.app = new App(this);
         this.gama_connector = new ConnectorGamaServer(this);
     }
 
     restart(){
-        this.vr_server.close()
+        this.player_server.close()
         this.gama_connector.close()
-        this.vr_server = new VrServer(this);
+        this.player_server = new PlayerServer(this);
         this.gama_connector = new ConnectorGamaServer(this);
     }
     changeJsonSettings(json_settings){
@@ -34,23 +34,24 @@ class ServerModel {
 
     notifyMonitor() {
         this.monitor_server.sendMonitorJsonState();
-        this.vr_server.broadcastJsonStateVr()
+        this.player_server.broadcastJsonStatePlayer();
+        console.log(this.json_state);
     }
 
-    notifyVrClients() {
-        this.vr_server.broadcastSimulationVR()
+    notifyPlayerClients() {
+        this.player_server.broadcastSimulationVR()
     }
 
-    addNewVrHeadset(id_vr) {
-        this.gama_connector.addNewVrHeadset(id_vr);
+    addNewPlayerHeadset(id_player) {
+        this.gama_connector.addNewPlayerHeadset(id_player);
     }
 
-    addNewVrHeadset(id_vr) {
-        this.gama_connector.addNewVrHeadset(id_vr);
+    addNewPlayerHeadset(id_player) {
+        this.gama_connector.addNewPlayerHeadset(id_player);
     }
 
-    removeVrHeadset(id_vr) {
-        this.gama_connector.removeVrHeadset(id_vr);
+    removePlayerHeadset(id_player) {
+        this.gama_connector.removePlayerHeadset(id_player);
     }
 
     launchExperiment() {

@@ -1,8 +1,8 @@
 {
   "type": "json_settings",
-  "gama_ws_port": 6666,
+  "gama_ws_port": 6868,
   "monitor_ws_port": 80,
-  "vr_ws_port": 8080,
+  "player_ws_port": 8080,
   "app_port": 8000,
   "model_file_path": "/models/model1.gaml",
   "ip_address_gama_server": "localhost",
