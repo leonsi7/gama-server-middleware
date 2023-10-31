@@ -22,8 +22,8 @@ class MonitorServer {
                 if (type == "launch_experiment") server_model.launchExperiment()
                 else if (type == "stop_experiment") server_model.stopExperiment()
                 else if (type == "try_connection") server_model.connectGama()
-                else if (type == "add_player_headset") server_model.addNewPlayerHeadset(json_monitor["id"])
-                else if (type == "remove_player_headset") server_model.removePlayerHeadset(json_monitor["id"])
+                else if (type == "add_player_headset") server_model.addNewPlayer(json_monitor["id"])
+                else if (type == "remove_player_headset") server_model.removePlayer(json_monitor["id"])
                 else if (type == "json_settings") server_model.changeJsonSettings(json_monitor)
             })
         });

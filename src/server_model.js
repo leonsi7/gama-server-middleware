@@ -44,16 +44,12 @@ class ServerModel {
         this.monitor_server.sendMonitorJsonSimulation()
     }
 
-    addNewPlayerHeadset(id_player) {
-        this.gama_connector.addNewPlayerHeadset(id_player);
+    addNewPlayer(id_player) {
+        this.gama_connector.addNewPlayer(id_player);
     }
 
-    addNewPlayerHeadset(id_player) {
-        this.gama_connector.addNewPlayerHeadset(id_player);
-    }
-
-    removePlayerHeadset(id_player) {
-        this.gama_connector.removePlayerHeadset(id_player);
+    removePlayer(id_player) {
+        this.gama_connector.removePlayer(id_player);
     }
 
     launchExperiment() {

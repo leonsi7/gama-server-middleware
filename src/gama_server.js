@@ -71,7 +71,7 @@ class ConnectorGamaServer {
     remove_player() {
         return  {
             "type": "expression",
-            "content": "Remove a VR Headset", 
+            "content": "Remove a VR ", 
             "exp_id": server_model_copy.json_state.gama.experiment_id,
             "expr": "do remove_player(\""+current_id_player+"\");"
         }
@@ -134,7 +134,7 @@ class ConnectorGamaServer {
         }
     }
 
-    addNewPlayerHeadset(id_player) {
+    addNewPlayer(id_player) {
         if (this.server_model.json_state["gama"]["launched_experiment"] == false) return
         current_id_player = id_player
         list_messages = [this.add_player];
@@ -148,7 +148,7 @@ class ConnectorGamaServer {
         this.sendMessages()
     }
 
-    removePlayerHeadset(id_player) {
+    removePlayer(id_player) {
         current_id_player = id_player
         list_messages = [this.remove_player];
         index_messages = 0;

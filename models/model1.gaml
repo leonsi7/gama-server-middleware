@@ -22,6 +22,7 @@ global {
 				location_json["x"] <- player.location.x;
 				location_json["y"] <- player.location.y;
 				info_json["position"] <- location_json;
+				info_json["random"] <- "";
 				json[player.id] <- info_json;
 			
 			}
