@@ -127,19 +127,21 @@ p {
 pre {
     margin: 20px;
     font-size: 18px;
+    overflow-x: auto; /* Activer la barre de défilement horizontale si nécessaire */
+    border: 1px solid #ccc;
 }
 
 
 /*Responsive part*/
 /*****************/
 
-@media (max-width: 1000px) {
+@media (max-width: 1300px) {
     .sections {
         width: 100%;
     }
 }
 
-@media (min-width: 1001px) {
+@media (min-width: 1301px) {
     .sections {
         display: flex;
         justify-content: space-between;

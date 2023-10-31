@@ -170,7 +170,7 @@ class ConnectorGamaServer {
         gama_socket = new WebSocket("ws://"+this.server_model.json_settings.ip_address_gama_server+":"+this.gama_ws_port);
     
         gama_socket.onopen = function() {
-            console.log("Connected to Gama Server");
+            console.log("-> Connected to Gama Server");
             server_model.json_state["gama"]["connected"] = true
             server_model.json_state["gama"]["launched_experiment"] = false
             server_model.notifyMonitor();
@@ -184,22 +184,21 @@ class ConnectorGamaServer {
                     server_model.json_simulation = JSON.parse(cleaned_string)
                     server_model.notifyPlayerClients();
                 }
-                else {
-                    if (data.content != String({ message: '{}', color: null })) console.log(data);
-                }
                 if (data.type == "CommandExecutedSuccessfully") {
+                    console.log("Message received from Gama Server:");
                     console.log(data);
-                    server_model.json_state["gama"]["content_error"] = ""
+
+                    server_model.json_state.gama.content_error = ""
                     if (data.command != undefined && data.command.type == "load") server_model.json_state.gama.experiment_id = data.content
                     continue_sending = true
                     setTimeout(sendMessages,300)
                 }
                 if (gama_error_messages.includes(data.type)) {
+                    console.log("Message received from Gama Server:");
                     console.log(data);
-                    var command_type
-                    if (data.command != undefined) command_type = data.command.type
-                    server_model.json_state["gama"]["content_error"] = data
-                    server_model.json_state["gama"]["loading"] = false
+
+                    server_model.json_state.gama.content_error = data
+                    server_model.json_state.gama.loading = false
                     server_model.notifyMonitor();
                     throw "A problem appeared in the last message. Please check the response from the Server"
                 }

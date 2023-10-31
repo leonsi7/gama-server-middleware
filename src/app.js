@@ -47,7 +47,7 @@ class App {
         });
 
         app.listen(this.app_port, () => {
-            console.log(`Listening on port ${this.app_port}`)
+            console.log(`-> Listening on port ${this.app_port}`)
         });
     }
 }
