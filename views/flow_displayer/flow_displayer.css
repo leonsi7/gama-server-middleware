@@ -124,6 +124,11 @@ p {
     padding:40px 40px;
 }
 
+pre {
+    margin: 20px;
+    font-size: 18px;
+}
+
 
 /*Responsive part*/
 /*****************/
@@ -142,132 +147,21 @@ p {
         margin-top: 20px;
     }
 
-    .gama-section {
+    .json-state {
         width: 48%;
         padding: 10px;
         box-sizing: border-box;
     }
 
-    .player-section {
+    .json-simulation {
         width: 48%;
         padding: 10px;
         box-sizing: border-box;
     }
-}
-
-/*Gama section*/
-/**************/
-
-#simulation-controls {
-    display: flex;
-    align-items: center; 
-    justify-content: center;
-    padding: 10px 10px;
-}
-
-#gama-loader {
-    content: "";
-    align-items: center;
-    justify-content: center;
-    border: 4px solid rgba(255, 255, 255, 0.3);
-    border-top: 4px solid #0074d9;
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    animation: spin 2s linear infinite;
-    display: inline-block;
-    margin-left: 5px;
-    padding-top: 10px;
-    padding-bottom: 10px;
 }
 
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
-}
-
-#content-error {
-    display: flex;
-    align-items: center; 
-    justify-content: center;
-    color: red;
-    padding-right: 35px;
-}
-
-#content-error:hover {
-    text-decoration: underline;
-}
-
-
-
-/*VR section*/
-/************/
-
-.player-section {
-    color: blue;
-    font-size: 16px;
-}
-
-.player_li {
-    margin: 10px 0;
-    padding: 10px;
-    border: 1px solid #ccc;
-    background-color: #f9f9f9;
-}
-
-.player_id {
-font-weight: bold;
-}
-
-.date_player {
-font-style: italic;
-}
-
-span.color-orange {
-color: orange;
-}
-
-span.color-green {
-color: green;
-}
-
-span.color-red {
-color: red;
-}
-
-.button-player-add {
-margin: 5px;
-padding: 5px 10px;
-background-color: #007BFF;
-color: #fff;
-border: none;
-cursor: pointer;
-}
-
-.button-player-add:disabled {
-background-color: #ccc;
-cursor: not-allowed;
-}
-
-.button-player-add:hover {
-background-color: #0056b3;
-}
-
-.button-player-remove {
-margin: 5px;
-padding: 5px 10px;
-background-color: #dc3545;
-color: #fff;
-border: none;
-cursor: pointer;
-}
-
-.button-player-remove:disabled {
-background-color: #ccc;
-cursor: not-allowed;
-}
-
-.button-player-remove:hover {
-background-color: #a8252f;
 }
 

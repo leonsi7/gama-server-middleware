@@ -17,6 +17,10 @@ class App {
         app.get('/monitor', (req, res) => {
           res.sendFile('monitor.html', { root: 'views/monitor' });
         });
+
+        app.get('/flow_displayer', (req, res) => {
+          res.sendFile('flow_displayer.html', { root: 'views/flow_displayer' });
+        });
         
         app.get('/settings', (req, res) => {
           res.sendFile('settings.html', { root: 'views/settings' });
@@ -25,6 +29,8 @@ class App {
         app.get('/player', (req, res) => {
           res.sendFile('player.html', { root: 'views/player' });
         });
+
+        
 
         //Some getters
 

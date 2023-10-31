@@ -15,30 +15,36 @@ global {
 	reflex  send_simulation_info when:every(1 #cycle){
 		map<string, unknown> json;
 		map<string, unknown> sending_message;
-		loop player_headset over:PlayerHeadset {
-			if(player_headset.isAlive){
+		loop player over:Player {
+			if(player.isAlive){
 				map<string,unknown> info_json;
 				map<string, unknown> location_json;
-				location_json["x"] <- player_headset.location.x;
-				location_json["y"] <- player_headset.location.y;
+				location_json["x"] <- player.location.x;
+				location_json["y"] <- player.location.y;
 				info_json["position"] <- location_json;
-				json[player_headset.id] <- info_json;
+				json[player.id] <- info_json;
 			
 			}
 		}
 		write as_json_string(json);
 	}
+
+	action create_player(string id_player) {
+		create Player {
+			id <- id_player;
+		}
+	}
 	
-	action removePlayerHeadset(string id_player) {
-		loop player_headset over: PlayerHeadset {
-			if (player_headset.id = id_player){
-				player_headset.isAlive <- false;
+	action remove_player(string id_player) {
+		loop player over: Player {
+			if (player.id = id_player){
+				player.isAlive <- false;
 			}
 		}
 	}
 }
 
-species PlayerHeadset skills:[moving] {
+species Player skills:[moving] {
 	
 	string id;
 	rgb color <- rgb(rnd(0,255),rnd(0,255),rnd(0,255));
@@ -56,8 +62,6 @@ species PlayerHeadset skills:[moving] {
     		draw circle(1) color:color;
     	}
     }
-    
-    
 }
 
 // Créez un environnement avec une zone spécifique où RandomGuy se déplace
@@ -65,7 +69,7 @@ experiment test type:gui {
     float minimum_cycle_duration <- 0.03 #second;
     output {
     	display map {
-			species PlayerHeadset aspect: base;
+			species Player aspect: base;
 		}
     }
 }

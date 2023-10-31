@@ -22,6 +22,14 @@ helpLink.addEventListener("click", function(event) {
     window.location.href = "/help";
 });
 
+
+const stateDisplayerLink = document.getElementById("state-displayer-link");
+stateDisplayerLink.addEventListener("click", function(event) {
+    event.preventDefault();
+    // Redirigez l'utilisateur vers la page /help
+    window.location.href = "/flow_displayer";
+});
+
 fetch('/getWsMonitorPort')
       .then(response => response.json())
       .then(data => {
@@ -47,6 +55,7 @@ function createWebSocket(monitor_ws_port) {
             document.querySelector("#gama-loader").style.visibility = json_state["gama"]["loading"] ? "visible" : "hidden";
             document.querySelector("#start-simulation").disabled =  json_state["gama"]["connected"]&& !json_state["gama"]["launched_experiment"]  ? false : true
             document.querySelector("#stop-simulation").disabled =  json_state["gama"]["connected"] &&  json_state["gama"]["launched_experiment"] ? false : true
+            document.querySelector("#content-error").innerHTML = json_state.gama.content_error != "" ? "Error: " + json_state.gama.content_error.type + ". Click for more details." : ""
 
             // About VR    
             document.querySelector("#player-container").innerHTML = ""
@@ -144,14 +153,13 @@ function createWebSocket(monitor_ws_port) {
     })
 
     socket.addEventListener('close', (event) => {
-        document.querySelector("#connection-state").innerHTML = "&#x274C; The central server disconnected ! Please refresh this page when the server came back to work"
-        document.querySelector("#connection-state").style = "color:red;"
-        document.querySelector(".sections").style = "display:none;"
-
         if (event.wasClean) {
             console.log('The WebSocket connection with Gama Server was properly be closed');
         } else {
             console.error('The Websocket connection with Gama Server interruped suddenly');
+            document.querySelector("#connection-state").innerHTML = "&#x274C; The central server disconnected ! Please refresh this page when the server came back to work"
+            document.querySelector("#connection-state").style = "color:red;"
+            document.querySelector(".sections").style = "display:none;"
         }
         console.log(`Closure id : ${event.code}, Reason : ${event.reason}`);
     })

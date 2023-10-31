@@ -15,6 +15,7 @@ var current_id_player;
 
 var server_model_copy;
 var model_file;
+var experiment_name
 
 //List of error messages for Gama Server
 const gama_error_messages = ["SimulationStatusError",
@@ -32,6 +33,7 @@ class ConnectorGamaServer {
         this.gama_ws_port = this.server_model.json_settings.gama_ws_port != undefined ? this.server_model.json_settings.gama_ws_port : DEFAULT_GAMA_WS_PORT;
         this.gama_error_messages = gama_error_messages;
         model_file = this.server_model.json_settings.type_model_file_path == "absolute" ? this.server_model.json_settings.model_file_path : process.cwd() + this.server_model.json_settings.model_file_path
+        experiment_name = this.server_model.json_settings.experiment_name;
         this.gama_socket = this.connectGama();
     }
 
@@ -43,7 +45,7 @@ class ConnectorGamaServer {
         return {
         "type": "load",
         "model": model_file,
-        "experiment": "test"
+        "experiment": experiment_name
         }
     }
     play_experiment() {
@@ -58,20 +60,20 @@ class ConnectorGamaServer {
             "exp_id": server_model_copy.json_state.gama.experiment_id,
         }
     }
-    add_player_headset() {
+    add_player() {
         return  {
             "type": "expression",
             "content": "Add a new VR headset", 
             "exp_id": server_model_copy.json_state.gama.experiment_id,
-            "expr": "create PlayerHeadset { id <- \""+current_id_player+"\"; }"
+            "expr": "do create_player(\""+current_id_player+"\");"
         }
     }
-    remove_player_headset() {
+    remove_player() {
         return  {
             "type": "expression",
             "content": "Remove a VR Headset", 
             "exp_id": server_model_copy.json_state.gama.experiment_id,
-            "expr": "do removePlayerHeadset(\""+current_id_player+"\");"
+            "expr": "do remove_player(\""+current_id_player+"\");"
         }
     }
 
@@ -135,7 +137,7 @@ class ConnectorGamaServer {
     addNewPlayerHeadset(id_player) {
         if (this.server_model.json_state["gama"]["launched_experiment"] == false) return
         current_id_player = id_player
-        list_messages = [this.add_player_headset];
+        list_messages = [this.add_player];
         index_messages = 0;
         do_sending = true;
         continue_sending = true;
@@ -148,7 +150,7 @@ class ConnectorGamaServer {
 
     removePlayerHeadset(id_player) {
         current_id_player = id_player
-        list_messages = [this.remove_player_headset];
+        list_messages = [this.remove_player];
         index_messages = 0;
         do_sending = true;
         continue_sending = true;
@@ -181,13 +183,13 @@ class ConnectorGamaServer {
                     const cleaned_string = data.content.toString().substring(13,data.content.toString().length -15)
                     server_model.json_simulation = JSON.parse(cleaned_string)
                     server_model.notifyPlayerClients();
-
                 }
                 else {
                     if (data.content != String({ message: '{}', color: null })) console.log(data);
                 }
                 if (data.type == "CommandExecutedSuccessfully") {
                     console.log(data);
+                    server_model.json_state["gama"]["content_error"] = ""
                     if (data.command != undefined && data.command.type == "load") server_model.json_state.gama.experiment_id = data.content
                     continue_sending = true
                     setTimeout(sendMessages,300)
@@ -196,11 +198,9 @@ class ConnectorGamaServer {
                     console.log(data);
                     var command_type
                     if (data.command != undefined) command_type = data.command.type
-                    server_model.json_state["gama"]["content_error"] = data.type + " for the command: "+ command_type
+                    server_model.json_state["gama"]["content_error"] = data
                     server_model.json_state["gama"]["loading"] = false
                     server_model.notifyMonitor();
-                    server_model.json_state["gama"]["content_error"] = ""
-
                     throw "A problem appeared in the last message. Please check the response from the Server"
                 }
             }

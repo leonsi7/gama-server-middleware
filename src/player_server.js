@@ -63,7 +63,7 @@ class PlayerServer {
         });
     }
 
-    broadcastSimulationVR() {
+    broadcastSimulationPlayer() {
         for (var id_player in this.server_model.json_simulation) {
             if (this.server_model.json_simulation[id_player] != undefined && id_player != "random_content") {
                 const index = player_socket_clients_id.indexOf(id_player)

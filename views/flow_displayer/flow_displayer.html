@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gama Server Linker Monitor</title>
+    <link rel="stylesheet" type="text/css" href="flow_displayer.css">
+</head>
+
+<body>
+    <header>
+        <h1>Gama Server Linker</h1>
+    </header>
+
+    <nav class="navbar">
+        <ul class="nav-list">
+            <li class="nav-item"><a href="#" id="monitor-link">Monitor</a></li>
+            <li class="nav-item"><a href="#" id="settings-link">Settings</a></li>
+            <li class="nav-item"><a href="#" id="state-displayer-link">Flow Displayer</a></li>
+            <li class="nav-item"><a href="#" id="help-link">Help</a></li>
+        </ul>
+    </nav>
+
+    <p id="connection-state" style="display:none;"></p>
+
+    <div class="sections">
+        <div class="json-state">
+            <h2 class="with-bar">Json State</h2>
+            <pre id="json-state-display"></pre>
+        </div>
+
+        <div class="json-simulation">
+            <h2 class="with-bar">Json Simulation</h2>
+            <pre id="json-simulation-display"></pre>
+        </div>
+
+
+    </div>
+
+    <script src="flow_displayer.js"></script>
+</body>
+
+</html>

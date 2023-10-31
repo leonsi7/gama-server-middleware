@@ -25,27 +25,27 @@ h1 {
 }
 
 h2 {
-    font-size: 20px;
-    color: #0074d9;
-    margin: 20px 0;
+  font-size: 20px;
+  color: #0074d9;
+  margin: 20px 0;
 }
 
 h2.with-bar {
-    position: relative;
-    text-align: center;
-    margin-top: 25px;
-    margin-bottom: 20px;
+  position: relative;
+  text-align: center;
+  margin-top: 25px;
+  margin-bottom: 20px;
 }
 
 h2.with-bar::after {
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    height: 4px;
-    background-color: #0074d9;
-    text-align: center;
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background-color: #0074d9;
+  text-align: center;
 }
 
 /*Button styles*/
@@ -98,9 +98,14 @@ button[disabled] {
     margin-left: 10px;
 }
 
+
 .nav-item a {
     text-decoration: none; /* Supprime les soulignements sur les liens */
     color: #fff; /* Couleur du texte des liens */
+}
+
+.nav-item a:hover {
+  text-decoration: underline;
 }
 
 /* Styles pour le bandeau bleu */
@@ -112,27 +117,48 @@ header {
     text-align: center;
 }
 
-
 #connection-state {
     padding:40px 40px;
 }
 
 
-
+.container {
+  width: 100%;
+}
 
 .form-container {
-  display: flex;
-  flex-direction: column;
+  width: 100%;
 }
 
 form {
-  margin: 20px auto;
-  padding: 1.5rem;
   width: 100%;
 }
 
 
+@media (max-width: 1000px) {
+  .container {
+      width: 100%;
+  }
+  .field {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    min-width: 0px;
+  }
+  .field label{
+    text-align: left;
+    width: 100%;
+  }
+}
+
+@media (min-width: 1001px) {
+  .container {
+      width: 60%;
+  }
+}
+
 .field {
+  margin: 20px;
   color: black;
   font-size: 1.2rem;
   display: flex;
@@ -141,6 +167,7 @@ form {
 }
 
 .field label {
+  
   min-width: 320px;
   align-items: start;
 }

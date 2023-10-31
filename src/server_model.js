@@ -40,7 +40,8 @@ class ServerModel {
     }
 
     notifyPlayerClients() {
-        this.player_server.broadcastSimulationVR()
+        this.player_server.broadcastSimulationPlayer()
+        this.monitor_server.sendMonitorJsonSimulation()
     }
 
     addNewPlayerHeadset(id_player) {
