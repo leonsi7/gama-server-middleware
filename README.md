@@ -39,4 +39,5 @@ First, you will have to create a new model based on the example model1.gaml
 You will need to create a webpage based on player.html.
 If you want to add player's instructions, you will also need to add code in player_server.js, server_model.js and gama_server.js. To understand how this code works, I created an UML diagram to show you the structure of the code.
 
-![Pseudo UML Diagram](https://github.com/leonsi7/gama-server-middleware/assets/104212258/a2c351ab-8964-4a5e-b06d-8fdb2ca6be0b)
+![Pseudo UML Diagram](https://github.com/leonsi7/gama-server-middleware/assets/104212258/ae3ac0c4-1663-47b0-b916-dbad47586010)
+
