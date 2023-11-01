@@ -12,6 +12,7 @@ var do_sending = false;
 var list_messages;
 var function_to_call;
 var current_id_player;
+var current_expression;
 
 var server_model_copy;
 var model_file;
@@ -77,6 +78,15 @@ class ConnectorGamaServer {
         }
     }
 
+    send_expression() {
+        return  {
+            "type": "expression",
+            "content": "Remove a VR ", 
+            "exp_id": server_model_copy.json_state.gama.experiment_id,
+            "expr": current_expression
+        }
+    }
+
     sendMessages() {
         if (do_sending && continue_sending) {
             if (index_messages < list_messages.length) {
@@ -85,7 +95,7 @@ class ConnectorGamaServer {
                     gama_socket.send(JSON.stringify(list_messages[index_messages]()))
                     console.log("Message sent to Gama-Server:");
                     console.log(list_messages[index_messages]());
-                    console.log("Waiting the answer...")
+                    console.log("Waiting for the answer (if any)...")
                 }
                 else gama_socket.send(JSON.stringify(list_messages[index_messages]));
                 continue_sending = false;
@@ -143,6 +153,7 @@ class ConnectorGamaServer {
         do_sending = true;
         continue_sending = true;
         function_to_call = () => {
+            console.log("The Player: "+id_player+" has been added to Gama");
             this.server_model.json_state["player"][id_player]["authentified"] = true
             this.server_model.notifyMonitor();
         }
@@ -156,9 +167,23 @@ class ConnectorGamaServer {
         do_sending = true;
         continue_sending = true;
         function_to_call = () => {
-            console.log("The Player headset: "+id_player+" has been removed from Gama");
+            console.log("The Player: "+id_player+" has been removed from Gama");
             this.server_model.json_state["player"][id_player]["authentified"] = false
             this.server_model.notifyMonitor();
+        }
+        this.sendMessages()
+    }
+
+    sendExpression(id_player, expr) {
+        if (this.server_model.json_state["gama"]["launched_experiment"] == false) return
+        expr = expr.replace('$id', "\"" + id_player + "\"")
+        current_expression = expr
+        list_messages = [this.send_expression];
+        index_messages = 0;
+        do_sending = true;
+        continue_sending = true;
+        function_to_call = () => {
+            console.log("The Player: "+id_player+" called the function: "+expr);
         }
         this.sendMessages()
     }

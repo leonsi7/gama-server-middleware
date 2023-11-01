@@ -38,6 +38,13 @@ class PlayerServer {
                         server_model.notifyMonitor();
                     }
                 }
+                if (json_player.type =="expression") {
+                    const index = player_socket_clients.indexOf(ws)
+                    const id_player = player_socket_clients_id[index]
+                    console.log(json_player);
+                    console.log(id_player);
+                    server_model.sendExpression(id_player, json_player.expr);
+                }
         
                 // if (json_player.type == "exit" && server_model.json_state["player"]["id_connected"].includes(json_player.id) && server_model.json_state["player"][json_player.id]["authentified"] == true){
                 //     server_model.removePlayerHeadset()

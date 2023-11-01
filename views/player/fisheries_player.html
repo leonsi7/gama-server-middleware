@@ -35,6 +35,18 @@ p {
     width: 100%; /* Texte sur toute la largeur */
 }
 
+.default-button {
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 5px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    text-align: center;
+}
+
 
 #connection-state {
     font-weight: bold;
@@ -119,6 +131,11 @@ p {
     }
 }
 
+#buttons {
+    display: flex;
+    flex-direction: column;
+}
+
     </style>
 </head>
 <body>
@@ -142,6 +159,11 @@ p {
         <p>Capital: <span id="capital"></span> G</p>
         <p>Fleet size: <span id="fleet_size"></span> trawler(s)</p>
         
+        <div id="buttons">
+            <button class="default-button" id="buy-boat" style="background-color: 1fff37;">Buy boat</button>
+            <button class="default-button" id="sell-boat" style="background-color: f00020;">Sell boat</button>
+        </div>
+
         <h2>Messages</h2>
         <div id="messages"></div>
 
@@ -223,6 +245,21 @@ p {
                 document.querySelector("#connection-state").innerHTML = "&#x274C; The cetral server disconnected ! Please refresh this page when the server came back to work"
                 document.querySelector("#connection-state").style = "color:red;font-weight: bold;"
             });
+
+            document.querySelector("#buy-boat").addEventListener('click', ()=>{
+                console.log("cic");
+                socket.send(JSON.stringify({
+                    "type": "expression",
+                    "expr": "do buy_boat($id);"
+                }))
+            })
+
+            document.querySelector("#sell-boat").addEventListener('click', ()=>{
+                socket.send(JSON.stringify({
+                    "type": "expression",
+                    "expr": "do sell_boat($id);"
+                }))
+            })
         }
     </script>
 </body>

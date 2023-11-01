@@ -52,6 +52,10 @@ class ServerModel {
         this.gama_connector.removePlayer(id_player);
     }
 
+    sendExpression(id_player, expr) {
+        this.gama_connector.sendExpression(id_player,expr);
+    }
+
     launchExperiment() {
         this.gama_connector.launchExperiment();
     }
