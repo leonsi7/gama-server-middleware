@@ -28,20 +28,19 @@ global{
 	
 	init{
 		do init_sim;
-		do create_rnd_company;
-		do create_rnd_company;
 	}
 	
-	action create_rnd_company(string id_player) {
+	action create_player(string id_player) {
 		do create_company(id_player, one_of(companies_default_names - company collect(each.name)),one_of(owners_default_names - company collect(each.name)));	
 	}
 	
-	action create_company(string id_player, string comp_name, string owner_name){
+	action create_company(string id_player_input, string comp_name, string owner_name){
 		map<string, unknown> json;
 		if length(company) < max_companies{
 			create company{
 				capital <- 100000.0;
-				id <- id_player;
+				id <- int(self);
+				id_player <- id_player_input;
 				name <- comp_name;	
 				owner <- owner_name;
 				homeport <- one_of(port);
@@ -49,13 +48,16 @@ global{
 				do create_boat;
 				nb_companies <- nb_companies + 1;
 			}
-			
-			json[id_player] <- ["type_info"::"init","name"::comp_name,"owner"::owner_name];
+			json[id_player_input] <- ["type_info"::"init","name"::comp_name,"owner"::owner_name];
 			
 		}else{
-			json[id_player] <- ["type_info"::"message","content"::"Cannot create company "+name+". Too many companies on the market."];
+			json[id_player_input] <- ["type_info"::"message","content"::"Cannot create company "+name+". Too many companies on the market."];
 		}
 		write as_json_string(json);
+	}
+	
+	action remove_player(string cid) {
+		do remove_company(first(company where (each.id_player=cid)));
 	}
 	
 	action remove_company(company c){
@@ -65,30 +67,32 @@ global{
 		c.active <- false;
 	}
 	
-	action buy_boat(int cid){
-		ask first(company where (each.id=cid)){
-			write company collect(each.id);
+	action buy_boat(string cid){
+		ask first(company where (each.id_player=cid)){
+			write company collect(each.id_player);
 			do buy_boat;
 		}
 	}
 	
-	action sell_boat(int cid){
-		ask first(company where (each.id=cid)){
+	action sell_boat(string cid){
+		ask first(company where (each.id_player=cid)){
 			do sell_boat;
 		}
 	}
 	
 	reflex send_info {
 		map<string, unknown> json;
-		loop i from: 0 to: max_companies - 1{
-			map<string, unknown> company_json;
-			company_json["type_info"] <- "cycle"
-			company_json["capture"] <- company(i).capture;
-			company_json["income"] <- company(i).income;
-			company_json["maintenance_cost"] <- company(i).maintenance_cost;
-			company_json["capital"] <- company(i).capital;
-			company_json["fleet_size"] <- length(company(i).fleet);
-			json[company(i).id] <- company_json;
+		loop player over:company {
+			if (player.active){
+				map<string, unknown> company_json;
+				company_json["type_info"] <- "cycle";
+				company_json["income"] <- player.income;
+				company_json["capture"] <- player.capture;
+				company_json["maintenance_cost"] <- player.maintenance_cost;
+				company_json["capital"] <- player.capital;
+				company_json["fleet_size"] <- length(player.fleet);
+				json[player.id_player] <- company_json;
+			}
 		}
 		write as_json_string(json);
 	}
@@ -111,7 +115,8 @@ global{
 
 
 species company{
-	string id;
+	string id_player;
+	int id;
 	bool active <- true;
 	string name <- "World Co.";
 	list<boat> fleet <- [];
@@ -128,9 +133,11 @@ species company{
 	
 	
 	reflex update{
-		capture_history <- last(sliding_window,capture_history+capture);
-		income_history <- last(sliding_window,income_history+income);
-		maintenance_history <- last(sliding_window,maintenance_history+maintenance_cost);
+		if (active){
+			capture_history <- last(sliding_window,capture_history+capture);
+			income_history <- last(sliding_window,income_history+income);
+			maintenance_history <- last(sliding_window,maintenance_history+maintenance_cost);
+		}
 	}
 	
 	
@@ -152,11 +159,11 @@ species company{
 				capital <- capital - buy_price;
 				do create_boat;
 			}else{
-				json[self.id] <- ["type_info"::"message","content"::"Cannot buy boats, not enough funds."];
+				json[self.id_player] <- ["type_info"::"message","content"::"Cannot buy boats, not enough funds."];
 				write as_json_string(json);
 			}
 		} else{
-			json[self.id] <- ["type_info"::"message","content"::"Cannot buy boat, the company is inactive."];
+			json[self.id_player] <- ["type_info"::"message","content"::"Cannot buy boat, the company is inactive."];
 			write as_json_string(json);
 		}
 		
@@ -171,7 +178,7 @@ species company{
 			ask t {do die;}
 			nb_trawlers <- nb_trawlers - 1;
 		}else{
-			json[self.id] <- ["type_info"::"message","content"::"Cannot sell boats, not enough boats."];
+			json[self.id_player] <- ["type_info"::"message","content"::"Cannot sell boats, not enough boats."];
 			write as_json_string(json);
 		}
 	}

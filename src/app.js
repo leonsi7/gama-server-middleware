@@ -27,7 +27,7 @@ class App {
         });
         
         app.get('/player', (req, res) => {
-          res.sendFile('player.html', { root: 'views/player' });
+          res.sendFile(this.server_model.json_settings.player_html_file, { root: 'views/player' });
         });
 
         

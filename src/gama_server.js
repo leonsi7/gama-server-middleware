@@ -32,7 +32,7 @@ class ConnectorGamaServer {
         server_model_copy = server_model;
         this.gama_ws_port = this.server_model.json_settings.gama_ws_port != undefined ? this.server_model.json_settings.gama_ws_port : DEFAULT_GAMA_WS_PORT;
         this.gama_error_messages = gama_error_messages;
-        model_file = this.server_model.json_settings.type_model_file_path == "absolute" ? this.server_model.json_settings.model_file_path : process.cwd() + this.server_model.json_settings.model_file_path
+        model_file = this.server_model.json_settings.type_model_file_path == "absolute" ? this.server_model.json_settings.model_file_path : process.cwd() + "/" + this.server_model.json_settings.model_file_path
         experiment_name = this.server_model.json_settings.experiment_name;
         this.gama_socket = this.connectGama();
     }
@@ -83,8 +83,9 @@ class ConnectorGamaServer {
                 //console.log("--> Sending message " + index_messages)
                 if (typeof list_messages[index_messages] == "function") {
                     gama_socket.send(JSON.stringify(list_messages[index_messages]()))
-                    //console.log("Message sent to Gama-Server:");
-                    //console.log(list_messages[index_messages]());
+                    console.log("Message sent to Gama-Server:");
+                    console.log(list_messages[index_messages]());
+                    console.log("Waiting the answer...")
                 }
                 else gama_socket.send(JSON.stringify(list_messages[index_messages]));
                 continue_sending = false;

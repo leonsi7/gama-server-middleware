@@ -59,6 +59,7 @@ function createWebSocket(monitor_ws_port) {
             jsonDisplay.elements.player_ws_port.value = json_settings.player_ws_port;
             jsonDisplay.elements.app_port.value = json_settings.app_port;
             jsonDisplay.elements.model_file_path.value = json_settings.model_file_path;
+            jsonDisplay.elements.player_html_file.value = json_settings.player_html_file;
             jsonDisplay.elements.experiment_name.value = json_settings.experiment_name;
             jsonDisplay.elements.ip_address_gama_server.value = json_settings.ip_address_gama_server;
             jsonDisplay.elements.model_file_path_type.value = json_settings.type_model_file_path == "absolute" ? "Absolute" : "Relative"
@@ -69,24 +70,33 @@ function createWebSocket(monitor_ws_port) {
     jsonForm.addEventListener("submit", function(event) {
         event.preventDefault();
         const type_path = document.getElementById("model-file-path-type").value == "Absolute" ? "absolute" : "relative"
-
+        const gama_ws_port = parseInt(document.getElementById("gama-ws-port").value)
+        const monitor_ws_port = parseInt(document.getElementById("monitor-ws-port").value)
+        const player_ws_port = parseInt(document.getElementById("player-ws-port").value)
+        const app_port = parseInt(document.getElementById("app-port").value)
         // Update JSON data with form values
-        json_settings = {
-            type:"json_settings",
-            gama_ws_port: parseInt(document.getElementById("gama-ws-port").value),
-            monitor_ws_port: parseInt(document.getElementById("monitor-ws-port").value),
-            player_ws_port: parseInt(document.getElementById("player-ws-port").value),
-            app_port: parseInt(document.getElementById("app-port").value),
-            model_file_path: document.getElementById("model-file-path").value,
-            experiment_name: document.getElementById("experiment-name").value,
-            ip_address_gama_server: document.getElementById("ip-address-gama-server").value,
-            type_model_file_path: type_path
-        };
-        console.log(json_settings);
-        // Display updated JSON data
-        socket.send(JSON.stringify(json_settings))
-        // Redirigez l'utilisateur vers la page /settings
-        window.location.href = "/settings";
+        if (gama_ws_port > 0 && monitor_ws_port > 0 && player_ws_port > 0 && app_port > 0) {
+            json_settings = {
+                type:"json_settings",
+                gama_ws_port: gama_ws_port,
+                monitor_ws_port: monitor_ws_port,
+                player_ws_port: player_ws_port,
+                app_port: app_port,
+                model_file_path: document.getElementById("model-file-path").value,
+                experiment_name: document.getElementById("experiment-name").value,
+                ip_address_gama_server: document.getElementById("ip-address-gama-server").value,
+                player_html_file: document.getElementById("player-html-file").value,
+                type_model_file_path: type_path
+            };
+            console.log(json_settings);
+            // Display updated JSON data
+            socket.send(JSON.stringify(json_settings))
+            // Redirigez l'utilisateur vers la page /settings
+            window.location.href = "/settings";
+        }
+        else {
+            alert('Please enter valid port numbers');
+        }
     });
 
     socket.addEventListener('close', (event) => {
