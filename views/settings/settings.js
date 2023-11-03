@@ -1,28 +1,5 @@
 const hostname = window.location.hostname;
 
-const monitorLink = document.getElementById("monitor-link");
-    monitorLink.addEventListener("click", function(event) {
-        event.preventDefault();
-        // Redirigez l'utilisateur vers la page /monitor
-        window.location.href = "/monitor";
-    });
-
-// Ajoutez un gestionnaire d'événements pour le lien "Settings"
-const settingsLink = document.getElementById("settings-link");
-settingsLink.addEventListener("click", function(event) {
-    event.preventDefault();
-    // Redirigez l'utilisateur vers la page /settings
-    window.location.href = "/settings";
-});
-
-const helpLink = document.getElementById("help-link");
-helpLink.addEventListener("click", function(event) {
-    event.preventDefault();
-    // Redirigez l'utilisateur vers la page /help
-    window.location.href = "/help";
-});
-
-
 const stateDisplayerLink = document.getElementById("state-displayer-link");
 stateDisplayerLink.addEventListener("click", function(event) {
     event.preventDefault();

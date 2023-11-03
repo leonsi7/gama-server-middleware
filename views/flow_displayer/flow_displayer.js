@@ -1,35 +1,5 @@
 const hostname = window.location.hostname;
 
-const monitorLink = document.getElementById("monitor-link");
-    monitorLink.addEventListener("click", function(event) {
-        event.preventDefault();
-        // Redirigez l'utilisateur vers la page /monitor
-        window.location.href = "/monitor";
-    });
-
-// Ajoutez un gestionnaire d'événements pour le lien "Settings"
-const settingsLink = document.getElementById("settings-link");
-settingsLink.addEventListener("click", function(event) {
-    event.preventDefault();
-    // Redirigez l'utilisateur vers la page /settings
-    window.location.href = "/settings";
-});
-
-const helpLink = document.getElementById("help-link");
-helpLink.addEventListener("click", function(event) {
-    event.preventDefault();
-    // Redirigez l'utilisateur vers la page /help
-    window.location.href = "/help";
-});
-
-const stateDisplayerLink = document.getElementById("state-displayer-link");
-stateDisplayerLink.addEventListener("click", function(event) {
-    event.preventDefault();
-    // Redirigez l'utilisateur vers la page /help
-    window.location.href = "/flow_displayer";
-});
-
-
 fetch('/getWsMonitorPort')
       .then(response => response.json())
       .then(data => {
@@ -43,13 +13,12 @@ function createWebSocket(monitor_ws_port) {
     };
 
     socket.onmessage = function(event){
-        const json_state = JSON.parse(event.data)
-        if (json_state.type == "json_state") {
-            const formattedJSON = JSON.stringify(json_state, null, 2);
+        const json = JSON.parse(event.data)
+        const formattedJSON = JSON.stringify(json, null, 2);
+        if (json.type == "json_state") {
             document.getElementById('json-state-display').textContent = formattedJSON;
         }
-        else if (json_state.type == "json_simulation") {
-            const formattedJSON = JSON.stringify(json_state, null, 2);
+        else if (json.type == "json_simulation") {
             document.getElementById('json-simulation-display').textContent = formattedJSON;
         }
     } 

@@ -19,30 +19,18 @@ global {
 			if(player.isAlive){
 				map<string,unknown> info_json;
 				map<string, unknown> location_json;
-				location_json["x"] <- player.location.x;
-				location_json["y"] <- player.location.y;
+				location_json["x"] <- int(player.location.x);
+				location_json["y"] <- int(player.location.y);
 				info_json["position"] <- location_json;
 				info_json["random"] <- "";
 				json[player.id] <- info_json;
 			
 			}
 		}
-		write as_json_string(json);
+		write to_json(json);
 	}
 
-	action create_player(string id_player) {
-		create Player {
-			id <- id_player;
-		}
-	}
-	
-	action remove_player(string id_player) {
-		loop player over: Player {
-			if (player.id = id_player){
-				player.isAlive <- false;
-			}
-		}
-	}
+
 }
 
 species Player skills:[moving] {
@@ -67,6 +55,22 @@ species Player skills:[moving] {
 
 // Créez un environnement avec une zone spécifique où RandomGuy se déplace
 experiment test type:gui {
+	
+	action create_player(string id_player) {
+		create Player {
+			id <- id_player;
+		}
+	}
+	
+	action remove_player(string id_player) {
+		loop player over: Player {
+			if (player.id = id_player){
+				player.isAlive <- false;
+			}
+		}
+	}
+	
+	
     float minimum_cycle_duration <- 0.03 #second;
     output {
     	display map {
