@@ -1,12 +1,5 @@
 const hostname = window.location.hostname;
 
-const stateDisplayerLink = document.getElementById("state-displayer-link");
-stateDisplayerLink.addEventListener("click", function(event) {
-    event.preventDefault();
-    // Redirigez l'utilisateur vers la page /help
-    window.location.href = "/flow_displayer";
-});
-
 
 document.addEventListener("DOMContentLoaded", function() {
 
@@ -36,12 +29,15 @@ function createWebSocket(monitor_ws_port) {
             jsonDisplay.elements.player_ws_port.value = json_settings.player_ws_port;
             jsonDisplay.elements.app_port.value = json_settings.app_port;
             jsonDisplay.elements.model_file_path.value = json_settings.model_file_path;
+            jsonDisplay.elements.player_web_interface.checked = json_settings.player_web_interface
             jsonDisplay.elements.player_html_file.value = json_settings.player_html_file;
             jsonDisplay.elements.experiment_name.value = json_settings.experiment_name;
             jsonDisplay.elements.ip_address_gama_server.value = json_settings.ip_address_gama_server;
             jsonDisplay.elements.model_file_path_type.value = json_settings.type_model_file_path == "absolute" ? "Absolute" : "Relative"
         }
-        
+        const player_web_interface = document.querySelector("#player-web-interface")
+        document.getElementById("player-html-file-label").style = player_web_interface.checked ? "color: black;" : "color: #C5C5C5;";
+        document.getElementById("player-html-file-input").disabled = !player_web_interface.checked;
     }
 
     jsonForm.addEventListener("submit", function(event) {
@@ -62,7 +58,8 @@ function createWebSocket(monitor_ws_port) {
                 model_file_path: document.getElementById("model-file-path").value,
                 experiment_name: document.getElementById("experiment-name").value,
                 ip_address_gama_server: document.getElementById("ip-address-gama-server").value,
-                player_html_file: document.getElementById("player-html-file").value,
+                player_web_interface: document.getElementById("player-web-interface").checked,
+                player_html_file: document.getElementById("player-html-file-input").value,
                 type_model_file_path: type_path
             };
             console.log(json_settings);
@@ -92,5 +89,11 @@ function createWebSocket(monitor_ws_port) {
         document.querySelector("#connection-state").innerHTML = "&#x274C; The cetral server disconnected ! Please refresh this page when the server came back to work"
         document.querySelector("#connection-state").style = "color:red;"
         document.querySelector(".container").style = "display:none;"
+    });
+
+    const player_web_interface = document.querySelector("#player-web-interface")
+    player_web_interface.addEventListener("change", function() {
+        document.getElementById("player-html-file-label").style = player_web_interface.checked ? "color: black;" : "color: #C5C5C5;";
+        document.getElementById("player-html-file-input").disabled = !player_web_interface.checked;
     });
 }

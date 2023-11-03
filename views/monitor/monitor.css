@@ -198,6 +198,29 @@ p {
     text-decoration: underline;
 }
 
+#start-simulation {
+background-color: #3A9D23;
+}
+
+#start-simulation:hover {
+background-color:#008000;
+}
+#start-simulation:disabled {
+    background-color: #ccc;
+}
+
+#stop-simulation {
+background-color: #dc3545;
+}
+
+#stop-simulation:hover {
+background-color: #a8252f;
+}
+
+#stop-simulation:disabled {
+    background-color: #ccc;
+}
+
 
 
 /*VR section*/
@@ -238,19 +261,19 @@ color: red;
 .button-player-add {
 margin: 5px;
 padding: 5px 10px;
-background-color: #007BFF;
+background-color: #3A9D23;
 color: #fff;
 border: none;
 cursor: pointer;
 }
 
-.button-player-add:disabled {
+.button-player-add:disabled .button-player-remove:disabled {
 background-color: #ccc;
 cursor: not-allowed;
 }
 
 .button-player-add:hover {
-background-color: #0056b3;
+background-color:#008000;
 }
 
 .button-player-remove {
@@ -260,11 +283,6 @@ background-color: #dc3545;
 color: #fff;
 border: none;
 cursor: pointer;
-}
-
-.button-player-remove:disabled {
-background-color: #ccc;
-cursor: not-allowed;
 }
 
 .button-player-remove:hover {

@@ -207,10 +207,11 @@ class ConnectorGamaServer {
                 const data = JSON.parse(event.data)
                 console.log(data);
                 if (data.type == "SimulationOutput" && data.content != String({ message: '{}', color: null })) {
-                    const cleaned_string = data.content.toString().substring(12,data.content.toString().length -15);
-                    const cleaned_string2 = cleaned_string.replace('\\','');
-                    console.log(cleaned_string2);
-                    server_model.json_simulation = JSON.parse(cleaned_string2);
+                    server_model.json_simulation = JSON.parse(data.content)
+                    // const cleaned_string = data.content.toString().substring(12,data.content.toString().length -15);
+                    // const cleaned_string2 = cleaned_string.replace('\\','');
+                    // console.log(cleaned_string2);
+                    // server_model.json_simulation = JSON.parse(cleaned_string2);
                     server_model.notifyPlayerClients();
                 }
                 if (data.type == "CommandExecutedSuccessfully") {

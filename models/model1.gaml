@@ -19,18 +19,17 @@ global {
 			if(player.isAlive){
 				map<string,unknown> info_json;
 				map<string, unknown> location_json;
-				location_json["x"] <- int(player.location.x);
-				location_json["y"] <- int(player.location.y);
+				location_json["x"] <- player.location.x;
+				location_json["y"] <- player.location.y;
 				info_json["position"] <- location_json;
 				info_json["random"] <- "";
 				json[player.id] <- info_json;
-			
 			}
 		}
-		write to_json(json);
+		ask gama {
+			do send message: to_json(json);
+		}
 	}
-
-
 }
 
 species Player skills:[moving] {

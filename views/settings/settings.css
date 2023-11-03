@@ -190,6 +190,7 @@ form {
   box-shadow: 0px 0px 5px 4px rgba(255, 255, 255, 0.3);
 }
 
+
 input[type="checkbox"] {
   width: 25px;
   outline: none;
@@ -205,4 +206,5 @@ input[type="checkbox"]:focus {
   text-align:center;
   padding: 20px 10px;
 }
+
 
