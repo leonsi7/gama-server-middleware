@@ -109,7 +109,7 @@ class ConnectorGamaServer {
     }
 
     launchExperiment() {
-        if (this.server_model.json_state["gama"]["connected"] == true && this.server_model.json_state["gama"]["launched_experiment"] == false) {
+        if (this.server_model.json_state["gama"]["connected"] == true && this.server_model.json_state["gama"]["experiment_state"] == 'NONE') {
             list_messages = [this.load_experiment, this.play_experiment];
             index_messages = 0;
             do_sending = true;
@@ -117,7 +117,6 @@ class ConnectorGamaServer {
             this.server_model.json_state["gama"]["loading"] = true
             this.server_model.notifyMonitor();
             function_to_call = () => {
-                this.server_model.json_state["gama"]["launched_experiment"] = true
                 this.server_model.json_state["gama"]["loading"] = false
                 this.server_model.notifyMonitor();
             }
@@ -126,7 +125,7 @@ class ConnectorGamaServer {
     }
 
     stopExperiment() {
-        if (this.server_model.json_state["gama"]["launched_experiment"] == true) {
+        if (['RUNNING','PAUSED'].includes(this.server_model.json_state["gama"]["experiment_state"])) {
             list_messages = [this.stop_experiment];
             index_messages = 0;
             do_sending = true;
@@ -134,7 +133,6 @@ class ConnectorGamaServer {
             this.server_model.json_state["gama"]["loading"] = true
             this.server_model.notifyMonitor();
             function_to_call = () => {
-                this.server_model.json_state["gama"]["launched_experiment"] = false
                 this.server_model.json_state["gama"]["loading"] = false
                 this.server_model.json_state["player"]["id_connected"].forEach(id_player => {
                     this.server_model.json_state["player"][id_player]["authentified"] = false
@@ -146,7 +144,7 @@ class ConnectorGamaServer {
     }
 
     addNewPlayer(id_player) {
-        if (this.server_model.json_state["gama"]["launched_experiment"] == false) return
+        if (this.server_model.json_state["gama"]["experiment_state"] == 'RUNNING') return
         current_id_player = id_player
         list_messages = [this.add_player];
         index_messages = 0;
@@ -175,7 +173,7 @@ class ConnectorGamaServer {
     }
 
     sendExpression(id_player, expr) {
-        if (this.server_model.json_state["gama"]["launched_experiment"] == false) return
+        if (this.server_model.json_state["gama"]["experiment_state"] == 'RUNNING') return
         expr = expr.replace('$id', "\"" + id_player + "\"")
         current_expression = expr
         list_messages = [this.send_expression];
@@ -198,7 +196,7 @@ class ConnectorGamaServer {
         gama_socket.onopen = function() {
             console.log("-> Connected to Gama Server");
             server_model.json_state["gama"]["connected"] = true
-            server_model.json_state["gama"]["launched_experiment"] = false
+            server_model.json_state["gama"]["experiment_state"] = 'NONE'
             server_model.notifyMonitor();
         };
     
@@ -206,18 +204,17 @@ class ConnectorGamaServer {
             try {
                 const data = JSON.parse(event.data)
                 console.log(data);
+                if (data.type == "SimulationStatus") {
+                    server_model.json_state.gama.experiment_state = data.content;
+                    server_model.notifyMonitor();
+                }
                 if (data.type == "SimulationOutput" && data.content != String({ message: '{}', color: null })) {
                     server_model.json_simulation = JSON.parse(data.content)
-                    // const cleaned_string = data.content.toString().substring(12,data.content.toString().length -15);
-                    // const cleaned_string2 = cleaned_string.replace('\\','');
-                    // console.log(cleaned_string2);
-                    // server_model.json_simulation = JSON.parse(cleaned_string2);
                     server_model.notifyPlayerClients();
                 }
                 if (data.type == "CommandExecutedSuccessfully") {
                     console.log("Message received from Gama Server:");
                     console.log(data);
-
                     server_model.json_state.gama.content_error = ""
                     if (data.command != undefined && data.command.type == "load") server_model.json_state.gama.experiment_id = data.content
                     continue_sending = true
@@ -226,7 +223,6 @@ class ConnectorGamaServer {
                 if (gama_error_messages.includes(data.type)) {
                     console.log("Message received from Gama Server:");
                     console.log(data);
-
                     server_model.json_state.gama.content_error = data
                     server_model.json_state.gama.loading = false
                     server_model.notifyMonitor();
@@ -240,7 +236,7 @@ class ConnectorGamaServer {
         }
         gama_socket.addEventListener('close', (event) => {
             server_model.json_state["gama"]["connected"] = false;
-            server_model.json_state["gama"]["launched_experiment"] = false;
+            server_model.json_state["gama"]["experiment_state"] = "NONE";
             server_model.json_state["gama"]["loading"] = false;
             server_model.json_state["player"]["id_connected"].forEach(id_player => {
                 server_model.json_state["player"][id_player]["authentified"] = false;

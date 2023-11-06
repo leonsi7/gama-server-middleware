@@ -3,7 +3,7 @@
     
     "gama": {
         "connected":false,
-        "launched_experiment":false,
+        "experiment_state":"NONE",
         "loading":false,
         "content_error":"",
         "experiment_id":""
