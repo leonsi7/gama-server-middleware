@@ -125,7 +125,7 @@ class ConnectorGamaServer {
     }
 
     stopExperiment() {
-        if (['RUNNING','PAUSED'].includes(this.server_model.json_state["gama"]["experiment_state"])) {
+        if (['RUNNING','PAUSED','NOTREADY'].includes(this.server_model.json_state["gama"]["experiment_state"])) {
             list_messages = [this.stop_experiment];
             index_messages = 0;
             do_sending = true;
@@ -144,7 +144,7 @@ class ConnectorGamaServer {
     }
 
     addNewPlayer(id_player) {
-        if (this.server_model.json_state["gama"]["experiment_state"] == 'RUNNING') return
+        if (['NONE',"NOTREADY"].includes(this.server_model.json_state["gama"]["experiment_state"])) return
         current_id_player = id_player
         list_messages = [this.add_player];
         index_messages = 0;

@@ -71,7 +71,7 @@ function createWebSocket(monitor_ws_port) {
                 date_player.classList.add("date_player")
                 player_button_add.classList.add("button-player-add"); // Ajoutez une classe "button-add" au bouton "Add"
                 player_button_remove.classList.add("button-player-remove");
-                if (json_state["gama"]["experiment_state"] == 'NONE') {
+                if (['RUNNING','PAUSED'].includes(json_state["gama"]["experiment_state"])) {
                     if (json_state["player"][element]["authentified"]) {
                         player_button_add.disabled = true
                         player_button_remove.disabled = false
