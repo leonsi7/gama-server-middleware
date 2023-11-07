@@ -6,7 +6,8 @@
         "experiment_state":"NONE",
         "loading":false,
         "content_error":"",
-        "experiment_id":""
+        "experiment_id":"",
+        "experiment_name":""
     },
 
     "player": {

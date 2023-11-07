@@ -214,18 +214,6 @@ background-color: #3A9D23;
 background-color:#008000;
 }
 
-#start-simulation:disabled {
-    background-color: #ccc;
-}
-
-#pause-simulation:disabled {
-    background-color: #ccc;
-}
-
-#resume-simulation:disabled {
-    background-color: #ccc;
-}
-
 #stop-simulation {
 background-color: #dc3545;
 }
@@ -241,6 +229,18 @@ background-color: #fea347;
 #pause-simulation:hover {
 background-color: #ff7f00;
 }
+#start-simulation:disabled {
+    background-color: #ccc;
+}
+
+#pause-simulation:disabled {
+    background-color: #ccc;
+}
+
+#resume-simulation:disabled {
+    background-color: #ccc;
+}
+
 
 #stop-simulation:disabled {
     background-color: #ccc;

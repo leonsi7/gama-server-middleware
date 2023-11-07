@@ -50,7 +50,7 @@ function createWebSocket(monitor_ws_port) {
                 document.querySelector('#resume-simulation').disabled = false
             }
             if (json_state.gama.experiment_state == 'RUNNING') {
-                document.querySelector("#simulation-launched").innerHTML = "&#10004; Simulation launched"
+                document.querySelector("#simulation-launched").innerHTML = "&#10004; Simulation started"
                 document.querySelector("#simulation-launched").style = "color:green;"
                 document.querySelector("#start-simulation").disabled =  true
                 document.querySelector("#stop-simulation").disabled =  false

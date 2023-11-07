@@ -116,7 +116,7 @@ class ConnectorGamaServer {
 
     launchExperiment() {
         if (this.server_model.json_state["gama"]["connected"] == true && this.server_model.json_state["gama"]["experiment_state"] == 'NONE') {
-            list_messages = [this.load_experiment, this.play_experiment];
+            list_messages = [this.load_experiment];
             index_messages = 0;
             do_sending = true;
             continue_sending = true;
@@ -241,6 +241,7 @@ class ConnectorGamaServer {
                 
                 if (data.type == "SimulationStatus") {
                     console.log(data);
+                    server_model.json_state.gama.experiment_id = data.exp_id;
                     if (data.content == 'NONE' && ['RUNNING','PAUSED','NOTREADY'].includes(server_model.json_state.gama.experiment_state)) {
                         server_model.removePlayers();
                     }
@@ -252,13 +253,13 @@ class ConnectorGamaServer {
                     server_model.notifyPlayerClients();
                 }
                 if (data.type == "CommandExecutedSuccessfully") {
-                    console.log(data);
+                    
                     console.log("Message received from Gama Server:");
                     console.log(data);
                     server_model.json_state.gama.content_error = ""
-                    if (data.command != undefined && data.command.type == "load") server_model.json_state.gama.experiment_id = data.content
+                    if (data.command != undefined && data.command.type == "load") server_model.json_state.gama.experiment_name = data.content
                     continue_sending = true
-                    setTimeout(sendMessages,300)
+                    setTimeout(sendMessages,300) 
                 }
                 if (gama_error_messages.includes(data.type)) {
                     console.log(data);
