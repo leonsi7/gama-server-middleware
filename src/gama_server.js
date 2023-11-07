@@ -246,7 +246,7 @@ class ConnectorGamaServer {
                     server_model.json_state.gama.experiment_state = data.content;
                     server_model.notifyMonitor();
                 }
-                if (data.type == "SimulationOutput" && data.content != String({ message: '{}', color: null })) {
+                if (data.type == "SimulationOutput") {
                     server_model.json_simulation = JSON.parse(data.content)
                     server_model.notifyPlayerClients();
                 }
