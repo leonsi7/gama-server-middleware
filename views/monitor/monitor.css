@@ -128,13 +128,13 @@ p {
 /*Responsive part*/
 /*****************/
 
-@media (max-width: 1000px) {
+@media (max-width: 1300px) {
     .sections {
         width: 100%;
     }
 }
 
-@media (min-width: 1001px) {
+@media (min-width: 1301px) {
     .sections {
         display: flex;
         justify-content: space-between;

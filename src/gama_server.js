@@ -238,8 +238,9 @@ class ConnectorGamaServer {
         gama_socket.onmessage = function(event) {
             try {
                 const data = JSON.parse(event.data)
-                console.log(data);
+                
                 if (data.type == "SimulationStatus") {
+                    console.log(data);
                     if (data.content == 'NONE' && ['RUNNING','PAUSED','NOTREADY'].includes(server_model.json_state.gama.experiment_state)) {
                         server_model.removePlayers();
                     }
@@ -251,6 +252,7 @@ class ConnectorGamaServer {
                     server_model.notifyPlayerClients();
                 }
                 if (data.type == "CommandExecutedSuccessfully") {
+                    console.log(data);
                     console.log("Message received from Gama Server:");
                     console.log(data);
                     server_model.json_state.gama.content_error = ""
@@ -259,6 +261,7 @@ class ConnectorGamaServer {
                     setTimeout(sendMessages,300)
                 }
                 if (gama_error_messages.includes(data.type)) {
+                    console.log(data);
                     console.log("Message received from Gama Server:");
                     console.log(data);
                     server_model.json_state.gama.content_error = data
@@ -281,17 +284,15 @@ class ConnectorGamaServer {
             });
             server_model.notifyMonitor();
             if (event.wasClean) {
-                console.log('The WebSocket connection with Gama Server was properly be closed');
+                console.log('-> The WebSocket connection with Gama Server was properly be closed');
             } else {
-                console.error('The Websocket connection with Gama Server interruped suddenly');
+                console.log('-> The Websocket connection with Gama Server interruped suddenly');
             }
-            console.log(`Closure id : ${event.code}, Reason : ${event.reason}`);
         })
         gama_socket.addEventListener('error', (error) => {
-            console.error('Websocket error :', error);
+            console.log("-> Failed to connect with Gama Server")
             
         });
-        
         this.server_model.json_state["gama"]["loading"] = false
         this.server_model.notifyMonitor();
         return gama_socket
