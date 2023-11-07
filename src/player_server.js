@@ -87,6 +87,12 @@ class PlayerServer {
         })
     }
 
+    removePlayers() {
+        this.server_model.json_state["player"]["id_connected"].forEach(id_player => {
+            this.server_model.json_state["player"][id_player]["authentified"] = false
+        });
+    }
+
     close() {
         this.player_socket.close()
     }

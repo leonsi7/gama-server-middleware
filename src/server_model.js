@@ -44,6 +44,10 @@ class ServerModel {
         this.monitor_server.sendMonitorJsonSimulation()
     }
 
+    removePlayers() {
+        this.player_server.removePlayers();
+    }
+
     addNewPlayer(id_player) {
         this.gama_connector.addNewPlayer(id_player);
     }
@@ -62,6 +66,14 @@ class ServerModel {
 
     stopExperiment() {
         this.gama_connector.stopExperiment();
+    }
+
+    pauseExperiment() {
+        this.gama_connector.pauseExperiment();
+    }
+
+    resumeExperiment() {
+        this.gama_connector.resumeExperiment();
     }
 
     connectGama() {

@@ -30,24 +30,32 @@ function createWebSocket(monitor_ws_port) {
                 document.querySelector("#simulation-launched").style = "color:red;"
                 document.querySelector("#start-simulation").disabled =  false
                 document.querySelector("#stop-simulation").disabled =  true
+                document.querySelector('#pause-simulation').disabled = true
+                document.querySelector('#resume-simulation').disabled = true
             }
             if (json_state.gama.experiment_state == 'NOTREADY') {
                 document.querySelector("#simulation-launched").innerHTML = "&#x274C; The simulation is not ready"
                 document.querySelector("#simulation-launched").style = "color:red;"
                 document.querySelector("#start-simulation").disabled =  true
                 document.querySelector("#stop-simulation").disabled =  true
+                document.querySelector('#pause-simulation').disabled = true
+                document.querySelector('#resume-simulation').disabled = true
             }
             if (json_state.gama.experiment_state == 'PAUSED') {
                 document.querySelector("#simulation-launched").innerHTML = "&#x231B;  The simulation is paused"
                 document.querySelector("#simulation-launched").style = "color:orange;"
                 document.querySelector("#start-simulation").disabled =  true
                 document.querySelector("#stop-simulation").disabled =  false
+                document.querySelector('#pause-simulation').disabled = true
+                document.querySelector('#resume-simulation').disabled = false
             }
             if (json_state.gama.experiment_state == 'RUNNING') {
                 document.querySelector("#simulation-launched").innerHTML = "&#10004; Simulation launched"
                 document.querySelector("#simulation-launched").style = "color:green;"
                 document.querySelector("#start-simulation").disabled =  true
                 document.querySelector("#stop-simulation").disabled =  false
+                document.querySelector('#pause-simulation').disabled = false
+                document.querySelector('#resume-simulation').disabled = true
             }
 
             // About VR    
@@ -143,6 +151,14 @@ function createWebSocket(monitor_ws_port) {
 
     document.querySelector("#stop-simulation").addEventListener('click', () => {
         socket.send(JSON.stringify({"type":"stop_experiment"}))
+    })
+
+    document.querySelector('#pause-simulation').addEventListener('click', () => {
+        socket.send(JSON.stringify({"type":"pause_experiment"}))
+    })
+
+    document.querySelector('#resume-simulation').addEventListener('click', () => {
+        socket.send(JSON.stringify({"type":"resume_experiment"}))
     })
 
     socket.addEventListener('close', (event) => {

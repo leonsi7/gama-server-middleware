@@ -198,14 +198,31 @@ p {
     text-decoration: underline;
 }
 
-#start-simulation {
+#start-simulation  {
 background-color: #3A9D23;
 }
 
-#start-simulation:hover {
+#start-simulation:hover  {
 background-color:#008000;
 }
+
+ #resume-simulation {
+background-color: #3A9D23;
+}
+
+ #resume-simulation:hover {
+background-color:#008000;
+}
+
 #start-simulation:disabled {
+    background-color: #ccc;
+}
+
+#pause-simulation:disabled {
+    background-color: #ccc;
+}
+
+#resume-simulation:disabled {
     background-color: #ccc;
 }
 
@@ -215,6 +232,14 @@ background-color: #dc3545;
 
 #stop-simulation:hover {
 background-color: #a8252f;
+}
+
+#pause-simulation {
+background-color: #fea347;
+}
+    
+#pause-simulation:hover {
+background-color: #ff7f00;
 }
 
 #stop-simulation:disabled {

@@ -61,6 +61,12 @@ class ConnectorGamaServer {
             "exp_id": server_model_copy.json_state.gama.experiment_id,
         }
     }
+    pause_experiment() {
+        return {
+            "type": "pause",
+            "exp_id": server_model_copy.json_state.gama.experiment_id,
+        }
+    }
     add_player() {
         return  {
             "type": "expression",
@@ -134,9 +140,38 @@ class ConnectorGamaServer {
             this.server_model.notifyMonitor();
             function_to_call = () => {
                 this.server_model.json_state["gama"]["loading"] = false
-                this.server_model.json_state["player"]["id_connected"].forEach(id_player => {
-                    this.server_model.json_state["player"][id_player]["authentified"] = false
-                });
+                this.server_model.removePlayers();
+                this.server_model.notifyMonitor();
+            }
+            this.sendMessages()
+        }
+    }
+
+    pauseExperiment() {
+        if (['RUNNING'].includes(this.server_model.json_state["gama"]["experiment_state"])) {
+            list_messages = [this.pause_experiment];
+            index_messages = 0;
+            do_sending = true;
+            continue_sending = true;
+            this.server_model.json_state["gama"]["loading"] = true
+            this.server_model.notifyMonitor();
+            function_to_call = () => {
+                this.server_model.json_state["gama"]["loading"] = false
+                this.server_model.notifyMonitor();
+            }
+            this.sendMessages()
+        }
+    }
+    resumeExperiment() {
+        if (this.server_model.json_state["gama"]["experiment_state"] == 'PAUSED') {
+            list_messages = [this.play_experiment];
+            index_messages = 0;
+            do_sending = true;
+            continue_sending = true;
+            this.server_model.json_state["gama"]["loading"] = true
+            this.server_model.notifyMonitor();
+            function_to_call = () => {
+                this.server_model.json_state["gama"]["loading"] = false
                 this.server_model.notifyMonitor();
             }
             this.sendMessages()
@@ -205,6 +240,9 @@ class ConnectorGamaServer {
                 const data = JSON.parse(event.data)
                 console.log(data);
                 if (data.type == "SimulationStatus") {
+                    if (data.content == 'NONE' && ['RUNNING','PAUSED','NOTREADY'].includes(server_model.json_state.gama.experiment_state)) {
+                        server_model.removePlayers();
+                    }
                     server_model.json_state.gama.experiment_state = data.content;
                     server_model.notifyMonitor();
                 }
