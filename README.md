@@ -4,7 +4,7 @@
 
 This code creates a server that can connect to Gama Server and allows players to play to a Gama modelized game.
 This server can monitor every connection. Thanks to the latter, Gama model doesn't need to manage connections with the players, it simply needs to implement in the simulation the commands of what a player can do and indicate which outputs need to be retrieved at each simulation cycle.
-An example is already implemented in the code. In this one, hearts are represented by dots that can move within a zone. The player interface can visualize this moving point.
+An example is already implemented in the code. In this one, players are represented by dots that can move within a zone. The player interface can visualize this moving point.
 
 ## Installation and launching
 
@@ -15,7 +15,10 @@ To install the server:
 - Type: ```npm start```to start the server.
 The server is now launched
 
-You will also need to load Gama Server, for more information see this [documentation](https://gama-platform.org/wiki/HeadlessServer). You can start Gama Server before or after the middleware server.
+You will also need to load Gama Server:
+- If you have a recent version of Gama wich includes Gama Server GUI (GAMA 1.9.4+), you only need to launch GAMA
+- If you have an older version of GAMA, you will need to launch Gama Server. For more information see this [documentation](https://gama-platform.org/wiki/HeadlessServer).
+You can start Gama before or after the middleware
 
 ### Monitor page
 
@@ -23,7 +26,7 @@ Go to [localhost:8000/monitor](http:localhost:8000/monitor)
 There is also the page settings which allows you to change the ports and the model file loaded by Gama Server. You can also change these settings before launching the middleware server by going to settings.json
 
 ### Player page
-
+Optionnal
 Go to [localhost:8000/player](http:localhost:8000/player)
 When a player connects, you will see it on the monitor page and you can add it on the gama simulation when it is launched.
 
