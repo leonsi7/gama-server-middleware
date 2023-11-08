@@ -251,6 +251,32 @@ background-color: #ff7f00;
 /*VR section*/
 /************/
 
+#add-everyone  {
+background-color: #3A9D23;
+}
+    
+#add-everyone:hover  {
+background-color:#008000;
+}
+
+#add-everyone:disabled {
+background-color: #ccc;
+}
+
+#remove-everyone  {
+background-color: #dc3545;
+}
+    
+#remove-everyone:hover  {
+background-color: #a8252f;
+}
+
+#remove-everyone:disabled {
+background-color: #ccc;
+}
+
+
+
 .player-section {
     color: blue;
     font-size: 16px;

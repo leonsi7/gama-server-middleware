@@ -140,7 +140,7 @@ class ConnectorGamaServer {
             this.server_model.notifyMonitor();
             function_to_call = () => {
                 this.server_model.json_state["gama"]["loading"] = false
-                this.server_model.removePlayers();
+                this.server_model.removeEveryPlayers();
                 this.server_model.notifyMonitor();
             }
             this.sendMessages()
@@ -178,7 +178,7 @@ class ConnectorGamaServer {
         }
     }
 
-    addNewPlayer(id_player) {
+    addPlayer(id_player) {
         if (['NONE',"NOTREADY"].includes(this.server_model.json_state["gama"]["experiment_state"])) return
         current_id_player = id_player
         list_messages = [this.add_player];
@@ -194,6 +194,7 @@ class ConnectorGamaServer {
     }
 
     removePlayer(id_player) {
+        if (['NONE',"NOTREADY"].includes(this.server_model.json_state["gama"]["experiment_state"])) return
         current_id_player = id_player
         list_messages = [this.remove_player];
         index_messages = 0;
@@ -205,6 +206,34 @@ class ConnectorGamaServer {
             this.server_model.notifyMonitor();
         }
         this.sendMessages()
+    }
+
+    addEveryPlayers() {
+        var index = 0
+        this.server_model.json_state.player.id_connected.forEach(id_player => {
+            if (this.server_model.json_state.player[id_player].connected) {
+                setTimeout(() => {this.addPlayer(id_player)},400*index);
+                index = index + 1
+            }
+        });
+    }
+
+    removeEveryPlayers() {
+        if (["RUNNING",'PAUSED'].includes(this.server_model.json_state.gama.experiment_state)){
+            var index = 0
+            this.server_model.json_state.player.id_connected.forEach(id_player => {
+                if (this.server_model.json_state.player[id_player].authentified) {
+                    setTimeout(() => {this.removePlayer(id_player);},400*index);
+                    index = index + 1
+                }
+            });
+        }
+        else {
+            this.server_model.json_state.player.id_connected.forEach(id_player => {
+                this.server_model.json_state.player[id_player].authentified = false;
+            });
+            this.server_model.notifyMonitor();
+        }
     }
 
     sendExpression(id_player, expr) {
@@ -243,7 +272,7 @@ class ConnectorGamaServer {
                     console.log(data);
                     server_model.json_state.gama.experiment_id = data.exp_id;
                     if (data.content == 'NONE' && ['RUNNING','PAUSED','NOTREADY'].includes(server_model.json_state.gama.experiment_state)) {
-                        server_model.removePlayers();
+                        server_model.removeEveryPlayers();
                     }
                     server_model.json_state.gama.experiment_state = data.content;
                     server_model.notifyMonitor();
@@ -253,7 +282,6 @@ class ConnectorGamaServer {
                     server_model.notifyPlayerClients();
                 }
                 if (data.type == "CommandExecutedSuccessfully") {
-                    
                     console.log("Message received from Gama Server:");
                     console.log(data);
                     server_model.json_state.gama.content_error = ""
@@ -262,7 +290,6 @@ class ConnectorGamaServer {
                     setTimeout(sendMessages,300) 
                 }
                 if (gama_error_messages.includes(data.type)) {
-                    console.log(data);
                     console.log("Message received from Gama Server:");
                     console.log(data);
                     server_model.json_state.gama.content_error = data

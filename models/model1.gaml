@@ -14,18 +14,21 @@ global {
 
 	reflex  send_simulation_info when:every(1 #cycle){
 		map<string, unknown> json;
-		map<string, unknown> sending_message;
+		list<map> contents;
 		loop player over:Player {
 			if(player.isAlive){
 				map<string,unknown> info_json;
+				map<string,unknown> contents_json;
 				map<string, unknown> location_json;
 				location_json["x"] <- player.location.x;
 				location_json["y"] <- player.location.y;
-				info_json["position"] <- location_json;
-				info_json["random"] <- "";
-				json[player.id] <- info_json;
+				contents_json["position"] <- location_json;
+				info_json["id"] <- [player.id];
+				info_json["contents"] <- contents_json;		
+				contents <+ info_json;			
 			}
 		}
+		json["contents"] <- contents;
 		ask gama {
 			do send message: to_json(json);
 		}

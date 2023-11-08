@@ -71,6 +71,7 @@ class PlayerServer {
     }
 
     broadcastSimulationPlayer() {
+        if (this.server_model.json_simulation.contents == undefined) return
         this.server_model.json_simulation.contents.forEach((element) => {
             const id_player = element.id[0]
             const index = player_socket_clients_id.indexOf(id_player)
@@ -93,11 +94,19 @@ class PlayerServer {
 
     broadcastJsonStatePlayer() {
         player_socket_clients.forEach((client) => {
-            client.send(JSON.stringify(this.server_model.json_state));
+            const index = player_socket_clients.indexOf(client)
+            const id_player = player_socket_clients_id[index]
+            const json_state = this.server_model.json_state
+            const json_state_player = {}
+            json_state_player.type = json_state.type
+            json_state_player.gama = json_state.gama
+            json_state_player.player = {}
+            json_state_player.player[id_player] = json_state.player[id_player]
+            client.send(JSON.stringify(json_state_player));
         })
     }
 
-    removePlayers() {
+    removeEveryPlayers() {
         this.server_model.json_state["player"]["id_connected"].forEach(id_player => {
             this.server_model.json_state["player"][id_player]["authentified"] = false
         });

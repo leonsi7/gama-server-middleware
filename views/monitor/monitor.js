@@ -26,28 +26,34 @@ function createWebSocket(monitor_ws_port) {
 
             //About experiment state
             if (json_state.gama.experiment_state == 'NONE') {
-                document.querySelector("#simulation-launched").innerHTML = "&#x274C; The simulation is not launched"
+                document.querySelector("#simulation-launched").innerHTML = "&#x274C; Simulation not launched"
                 document.querySelector("#simulation-launched").style = "color:red;"
                 document.querySelector("#start-simulation").disabled =  false
                 document.querySelector("#stop-simulation").disabled =  true
                 document.querySelector('#pause-simulation').disabled = true
                 document.querySelector('#resume-simulation').disabled = true
+                document.querySelector('#add-everyone').disabled = true
+                document.querySelector('#remove-everyone').disabled = true
             }
             if (json_state.gama.experiment_state == 'NOTREADY') {
-                document.querySelector("#simulation-launched").innerHTML = "&#x274C; The simulation is not ready"
+                document.querySelector("#simulation-launched").innerHTML = "&#x274C; Simulation not ready"
                 document.querySelector("#simulation-launched").style = "color:red;"
                 document.querySelector("#start-simulation").disabled =  true
                 document.querySelector("#stop-simulation").disabled =  true
                 document.querySelector('#pause-simulation').disabled = true
                 document.querySelector('#resume-simulation').disabled = true
+                document.querySelector('#add-everyone').disabled = true
+                document.querySelector('#remove-everyone').disabled = true
             }
             if (json_state.gama.experiment_state == 'PAUSED') {
-                document.querySelector("#simulation-launched").innerHTML = "&#x231B;  The simulation is paused"
+                document.querySelector("#simulation-launched").innerHTML = "&#x231B;  Simulation paused"
                 document.querySelector("#simulation-launched").style = "color:orange;"
                 document.querySelector("#start-simulation").disabled =  true
                 document.querySelector("#stop-simulation").disabled =  false
                 document.querySelector('#pause-simulation').disabled = true
                 document.querySelector('#resume-simulation').disabled = false
+                document.querySelector('#add-everyone').disabled = false
+                document.querySelector('#remove-everyone').disabled = false
             }
             if (json_state.gama.experiment_state == 'RUNNING') {
                 document.querySelector("#simulation-launched").innerHTML = "&#10004; Simulation started"
@@ -56,6 +62,8 @@ function createWebSocket(monitor_ws_port) {
                 document.querySelector("#stop-simulation").disabled =  false
                 document.querySelector('#pause-simulation').disabled = false
                 document.querySelector('#resume-simulation').disabled = true
+                document.querySelector('#add-everyone').disabled = false
+                document.querySelector('#remove-everyone').disabled = false
             }
 
             // About VR    
@@ -159,6 +167,14 @@ function createWebSocket(monitor_ws_port) {
 
     document.querySelector('#resume-simulation').addEventListener('click', () => {
         socket.send(JSON.stringify({"type":"resume_experiment"}))
+    })
+
+    document.querySelector("#add-everyone").addEventListener('click', () => {
+        socket.send(JSON.stringify({"type":"add_every_players"}))
+    })
+
+    document.querySelector("#remove-everyone").addEventListener('click', () => {
+        socket.send(JSON.stringify({"type":"remove_every_players"}))
     })
 
     socket.addEventListener('close', (event) => {

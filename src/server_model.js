@@ -44,12 +44,16 @@ class ServerModel {
         this.monitor_server.sendMonitorJsonSimulation()
     }
 
-    removePlayers() {
-        this.player_server.removePlayers();
+    removeEveryPlayers() {
+        this.gama_connector.removeEveryPlayers();
     }
 
-    addNewPlayer(id_player) {
-        this.gama_connector.addNewPlayer(id_player);
+    addEveryPlayers() {
+        this.gama_connector.addEveryPlayers();
+    }
+
+    addPlayer(id_player) {
+        this.gama_connector.addPlayer(id_player);
     }
 
     removePlayer(id_player) {
