@@ -74,46 +74,70 @@ function createWebSocket(monitor_ws_port) {
                 player_button_add_span.appendChild(player_button_add)
                 player_button_add.innerHTML = "Add"
                 player_button_add.disabled = true
+                player_button_add.classList.add("button-player-add"); 
+
                 const player_button_remove_span = document.createElement('span')
                 const player_button_remove = document.createElement('button')
                 player_button_remove_span.appendChild(player_button_remove)
                 player_button_remove.innerHTML = "Remove"
                 player_button_remove.disabled = true
+                player_button_remove.classList.add("button-player-remove");
+
+                const player_icon_span = document.createElement('span')
+                player_icon_span.classList.add('player-icon-span')
+
                 const player_li = document.createElement('p')
                 player_li.classList.add("player_li")
-                const player_id = document.createElement('span')
-                player_id.classList.add("player_id")
-                const date_player = document.createElement('span')
-                date_player.classList.add("date_player")
-                player_button_add.classList.add("button-player-add"); // Ajoutez une classe "button-add" au bouton "Add"
-                player_button_remove.classList.add("button-player-remove");
+
+                const player_info_span = document.createElement('span')
+
+
+                const player_info_div = document.createElement('div')
+                player_info_div.classList.add("info-div")
+                
+                const player_id = document.createElement('li')
+                const player_status = document.createElement('li')
+                const player_date = document.createElement('li')
+                player_id.innerHTML = "ID: <b>" + String(element) + "</b>"
                 if (['RUNNING','PAUSED'].includes(json_state["gama"]["experiment_state"])) {
+                    
                     if (json_state["player"][element]["authentified"]) {
                         player_button_add.disabled = true
                         player_button_remove.disabled = false
+                        player_status.innerHTML = "Status: Authenticated"
                         if (json_state["player"][element]["connected"]){
-                            player_id.innerHTML = "&#10004; ID: "+ String(element)
-                            player_li.style = "color:green;"
-                            date_player.innerHTML = " - Connected at: " + json_state["player"][element]["date_connection"] + " - Status: Authentified"
+                            player_icon_span.innerHTML = "&#10004;"
+                            player_icon_span.style = "color:green;"
+                            player_id.style = "color:green;"
+                            player_status.style = "color:green;"
+                            player_date.innerHTML = "Connected at: " + json_state["player"][element]["date_connection"] 
+                            player_date.style = "color:green;"
                         }
                         else {
-                            player_id.innerHTML = "   &#x274C; ID: "+ String(element)
-                            player_li.style = "color:red;"
-                            date_player.innerHTML = " - Last connection at: " + json_state["player"][element]["date_connection"] + " - Status: Authentified"
+                            player_icon_span.innerHTML = "&#x274C;"
+                            player_id.style = "color:red;"
+                            player_status.style = "color:red;"
+                            player_date.innerHTML = "Last connection at: " + json_state["player"][element]["date_connection"] 
+                            player_date.style = "color:red;"
                         }
                     }
                     else {
                         player_button_add.disabled = false
                         player_button_remove.disabled = true
+                        player_status.innerHTML = "Status: Unauthenticated"
                         if (json_state["player"][element]["connected"]){
-                            player_id.innerHTML = "ID: "+ String(element)
-                            player_li.style = "color:orange;"
-                            date_player.innerHTML = " - Connected at: " + json_state["player"][element]["date_connection"] + " - Status: Unauthentified"
+                            player_icon_span.innerHTML = "&#x231B;"
+                            player_id.style = "color:orange;"
+                            player_status.style = "color:orange;"
+                            player_date.innerHTML = "Connected at: " + json_state["player"][element]["date_connection"] 
+                            player_date.style = "color:orange;"
                         }
                         else {
-                            player_id.innerHTML = "   &#x274C; ID: "+ String(element)
-                            player_li.style = "color:red;"
-                            date_player.innerHTML = " - Last connection at: " + json_state["player"][element]["date_connection"] + " - Status: Unauthentified"
+                            player_icon_span.innerHTML = "&#x274C;"
+                            player_id.style = "color:red;"
+                            player_status.style = "color:red;"
+                            player_date.innerHTML = "Last connection at: " + json_state["player"][element]["date_connection"] 
+                            player_date.style = "color:red;"
                         }
                     }
                 }
@@ -121,22 +145,32 @@ function createWebSocket(monitor_ws_port) {
                     player_button_add.disabled = true
                     player_button_remove.disabled = true
                     if (json_state["player"][element]["connected"]){
-                        player_id.innerHTML = "ID: "+ String(element)
-                        player_li.style = "color:orange;"
-                        date_player.innerHTML = " - Connected at: " + json_state["player"][element]["date_connection"] + " - Status: Unauthentified"
+                        player_icon_span.innerHTML = "&#x231B;"
+                        player_id.style = "color:orange;"
+                        player_status.innerHTML = "Status: Unauthenticated"
+                        player_status.style = "color:orange;"
+                        player_date.innerHTML = "Connected at: " + json_state["player"][element]["date_connection"] 
+                        player_date.style = "color:orange;"
                     }
                     else {
-                        player_id.innerHTML = "   &#x274C; ID: "+ String(element)
-                            player_li.style = "color:red;"
-                            date_player.innerHTML = " - Last connection at: " + json_state["player"][element]["date_connection"] + " - Status: Unauthentified"
+                        player_icon_span.innerHTML = "&#x274C;"
+                        player_id.style = "color:red;"
+                        player_status.innerHTML = "Status: Unauthenticated"
+                        player_status.style = "color:red;"
+                        player_date.innerHTML = "Last connection at: " + json_state["player"][element]["date_connection"] 
+                        player_date.style = "color:red;"
                     }
                 }
                 
                 document.querySelector("#player-container").appendChild(player_li)
                 player_li.appendChild(player_button_add_span)
                 player_li.appendChild(player_button_remove_span)
-                player_li.appendChild(player_id)
-                player_li.appendChild(date_player)
+                player_li.appendChild(player_icon_span)
+                player_li.appendChild(player_info_span)
+                player_info_span.appendChild(player_info_div)
+                player_info_div.appendChild(player_id)
+                player_info_div.appendChild(player_status)
+                player_info_div.appendChild(player_date)
 
                 player_button_add.addEventListener('click', () => {
                     socket.send(JSON.stringify({"type":"add_player_headset","id":element}))

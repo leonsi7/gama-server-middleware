@@ -287,6 +287,8 @@ background-color: #ccc;
     padding: 10px;
     border: 1px solid #ccc;
     background-color: #f9f9f9;
+    display: flex;
+    flex-direction: row;
 }
 
 .player_id {
@@ -310,7 +312,6 @@ color: red;
 }
 
 .button-player-add {
-margin: 5px;
 padding: 5px 10px;
 background-color: #3A9D23;
 color: #fff;
@@ -328,7 +329,6 @@ background-color:#008000;
 }
 
 .button-player-remove {
-margin: 5px;
 padding: 5px 10px;
 background-color: #dc3545;
 color: #fff;
@@ -336,7 +336,27 @@ border: none;
 cursor: pointer;
 }
 
+
 .button-player-remove:hover {
 background-color: #a8252f;
 }
+.info-div {
+    margin-left: 15px;
+}
 
+.player-icon-span {
+    margin: 15px;
+    padding: auto;
+    display: flex;
+    justify-content: center;
+}
+span {
+    margin: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.player_id {
+    font-weight: bold;
+}

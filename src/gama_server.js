@@ -326,6 +326,7 @@ class ConnectorGamaServer {
                     server_model.notifyMonitor();
                 }
                 if (data.type == "SimulationOutput") {
+                    //console.log(data);
                     server_model.json_simulation = JSON.parse(data.content)
                     server_model.notifyPlayerClients();
                 }

@@ -89,7 +89,6 @@ class PlayerServer {
             if (index != -1) {
                 const json_simulation_player = element.contents;
                 json_simulation_player.type = "json_simulation"
-                console.log(json_simulation_player);
                 player_socket_clients[index].send(JSON.stringify(json_simulation_player))
             }
         });
