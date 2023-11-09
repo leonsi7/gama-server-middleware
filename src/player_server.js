@@ -87,7 +87,8 @@ class PlayerServer {
             const id_player = element.id[0]
             const index = player_socket_clients_id.indexOf(id_player)
             if (index != -1) {
-                const json_simulation_player = element.contents;
+                const json_simulation_player = {}
+                json_simulation_player.contents = element.contents
                 json_simulation_player.type = "json_simulation"
                 player_socket_clients[index].send(JSON.stringify(json_simulation_player))
             }
