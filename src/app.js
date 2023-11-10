@@ -22,6 +22,10 @@ class App {
         this.app.set('view engine', 'ejs');
         this.app.use(express.static('views'));
 
+        this.app.get('/', (req, res) => {
+          res.redirect('/monitor');
+        });
+
         this.app.get('/monitor', (req, res) => {
           res.sendFile('monitor.html', { root: 'views/monitor' });
         });
