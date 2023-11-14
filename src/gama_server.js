@@ -282,7 +282,7 @@ class ConnectorGamaServer {
      */
 
     sendExpression(id_player, expr) {
-        if (this.server_model.json_state["gama"]["experiment_state"] == 'RUNNING') return
+        if (['NONE',"NOTREADY"].includes(this.server_model.json_state["gama"]["experiment_state"])) return
         expr = expr.replace('$id', "\"" + id_player + "\"")
         current_expression = expr
         list_messages = [this.send_expression];
@@ -326,7 +326,7 @@ class ConnectorGamaServer {
                     server_model.notifyMonitor();
                 }
                 if (data.type == "SimulationOutput") {
-                    //console.log(data);
+                    console.log(data);
                     server_model.json_simulation = JSON.parse(data.content)
                     server_model.notifyPlayerClients();
                 }
