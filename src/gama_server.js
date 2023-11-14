@@ -317,6 +317,7 @@ class ConnectorGamaServer {
                 const data = JSON.parse(event.data)
                 
                 if (data.type == "SimulationStatus") {
+                    console.log("Message received from Gama Server:");
                     console.log(data);
                     server_model.json_state.gama.experiment_id = data.exp_id;
                     if (data.content == 'NONE' && ['RUNNING','PAUSED','NOTREADY'].includes(server_model.json_state.gama.experiment_state)) {
@@ -326,7 +327,6 @@ class ConnectorGamaServer {
                     server_model.notifyMonitor();
                 }
                 if (data.type == "SimulationOutput") {
-                    console.log(data);
                     server_model.json_simulation = JSON.parse(data.content)
                     server_model.notifyPlayerClients();
                 }
