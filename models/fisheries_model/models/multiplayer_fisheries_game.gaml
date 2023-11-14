@@ -48,14 +48,21 @@ global{
 				do create_boat;
 				nb_companies <- nb_companies + 1;
 			}
-			json[id_player_input] <- ["type_info"::"init","name"::comp_name,"owner"::owner_name];
 			
-		}else{
-			json[id_player_input] <- ["type_info"::"message","content"::"Cannot create company "+name+". Too many companies on the market."];
-		}
+			map<string,unknown> info_json;
+			map<string,unknown> contents_json;
+			map<string, unknown> init_json;
+			contents_json['type'] <- "init";
+			contents_json['contents'] <- ["name"::comp_name,"owner"::owner_name];
+			info_json["id"] <- [id_player_input];
+			info_json["contents"] <- contents_json;
+			json["contents"] <- [info_json];
+			//write json;
+			}
 		ask gama {
 			do send message: to_json(json);
 		}
+		
 	}
 	
 	
@@ -67,19 +74,6 @@ global{
 		c.active <- false;
 	}
 	
-	action buy_boat(string cid){
-		ask first(company where (each.id_player=cid)){
-			write company collect(each.id_player);
-			do buy_boat;
-		}
-	}
-	
-	action sell_boat(string cid){
-		ask first(company where (each.id_player=cid)){
-			do sell_boat;
-		}
-	}
-	
 	reflex send_info {
 		
 		map<string, unknown> json;
@@ -89,14 +83,16 @@ global{
 				map<string,unknown> info_json;
 				map<string,unknown> contents_json;
 				map<string, unknown> status_json;
+				status_json["name"] <- player.name;
+				status_json["owner"] <- player.owner;
 				status_json["income"] <- player.income;
 				status_json["capture"] <- player.capture;
 				status_json["maintenance_cost"] <- player.maintenance_cost;
 				status_json["capital"] <- player.capital;
 				status_json["fleet_size"] <- length(player.fleet);
 				contents_json["contents"] <- status_json;
-				contents_json['type'] <- "status";
-				info_json["id"] <- [player.id];
+				contents_json['type'] <- "cycle";
+				info_json["id"] <- [player.id_player];
 				info_json["contents"] <- contents_json;		
 				contents <+ info_json;			
 			}
@@ -206,6 +202,19 @@ experiment Multiplayer type: gui autorun: false {
 	action remove_player(string cid) {
 		ask world {
 			do remove_company(first(company where (each.id_player=cid)));
+		}
+	}
+	
+	action buy_boat(string cid){
+		ask first(company where (each.id_player=cid)){
+			write company collect(each.id_player);
+			do buy_boat;
+		}
+	}
+	
+	action sell_boat(string cid){
+		ask first(company where (each.id_player=cid)){
+			do sell_boat;
 		}
 	}
 	
